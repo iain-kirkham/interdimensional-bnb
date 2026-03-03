@@ -18,6 +18,7 @@ services:
     env_file: .env
     volumes:
       - .:/app
+      - /app/.venv
     ports:
       - "8000:8000"
     depends_on:
@@ -25,6 +26,7 @@ services:
     environment:
       - DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
       - UV_LINK_MODE=copy
+      - UV_PROJECT_ENVIRONMENT=/opt/venv
 
 volumes:
   postgres_data:
