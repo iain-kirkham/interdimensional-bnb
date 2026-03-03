@@ -1,4 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Room, Booking
@@ -23,14 +25,16 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
-        # Attempt to find bookings matching the current user's username or full name
+
         username = user.get_username()
         full_name = f"{user.first_name} {user.last_name}".strip()
         bookings = Booking.objects.none()
-        if username:
-            bookings = Booking.objects.filter(guest_name__icontains=username)
-        if full_name:
-            bookings = bookings | Booking.objects.filter(guest_name__icontains=full_name)
+        if username and full_name:
+            bookings = Booking.objects.filter(guest_name__in=[username, full_name])
+        elif username:
+            bookings = Booking.objects.filter(guest_name=username)
+        elif full_name:
+            bookings = Booking.objects.filter(guest_name=full_name)
         context['user'] = user
         context['bookings'] = bookings.distinct()
         return context
@@ -55,8 +59,15 @@ def book_room(request, room_id):
     })
 
 
+@login_required
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
+    user = request.user
+    username = user.get_username()
+    full_name = f"{user.first_name} {user.last_name}".strip()
+    if booking.guest_name not in ([username] if username else []) + ([full_name] if full_name else []):
+        return HttpResponseForbidden("You do not have permission to view this booking.")
+
     return render(request, "booking/booking_confirmation.html", {
         "booking": booking,
     })

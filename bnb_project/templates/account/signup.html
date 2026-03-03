@@ -3,7 +3,7 @@
 {% block content %}
   <h1>Sign Up</h1>
   {% if form %}
-    <form method="post" action=".{% url 'account_signup' %}">
+    <form method="post" action="{% url 'account_signup' %}">
       {% csrf_token %}
       {{ form.as_p }}
       <button type="submit">Sign up</button>
