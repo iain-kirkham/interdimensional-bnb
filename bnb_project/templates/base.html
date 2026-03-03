@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Interdimensional BnB{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <nav>
+        <!-- Site-wide navigation bar -->
+        <a href="/">Home</a>
+        <a href="/rooms/">Rooms</a>
+        <a href="/booking/">Booking</a>
+        <a href="/profile/">Profile</a>
+    </nav>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer>
+        <p>&copy; 2026 Interdimensional BnB</p>
+    </footer>
+</body>
+</html>
