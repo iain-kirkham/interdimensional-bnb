@@ -16,17 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from django.views.generic import TemplateView
-from rooms.views import RoomDetailView
+from django.views.generic import TemplateView, RedirectView
+from rooms.views import RoomDetailView, ProfileView, book_room
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path('about/', TemplateView.as_view(template_name='about/about.html'), name='about'),
     path('room/<int:pk>/', RoomDetailView.as_view(), name='room_detail'),
-    path('profile/', TemplateView.as_view(template_name='profile/profile.html'), name='profile'),
-    path('login/', TemplateView.as_view(template_name='login/login.html'), name='login'),
-    path('signup/', TemplateView.as_view(template_name='signup/signup.html'), name='signup'),
-    path('booking/', TemplateView.as_view(template_name='booking/booking.html'), name='booking'),
+    path('profile/', ProfileView.as_view(), name='profile'),
+    path('login/', RedirectView.as_view(pattern_name='account_login', permanent=False), name='login'),
+    path('signup/', RedirectView.as_view(pattern_name='account_signup', permanent=False), name='signup'),
+    path('booking/<int:room_id>/', book_room, name='booking'),
     path("", include("rooms.urls")),
 ]

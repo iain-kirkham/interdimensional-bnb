@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Sign Up{% endblock %}
+{% block content %}
+  <h1>Sign Up</h1>
+  {% if form %}
+    <form method="post" action=".{% url 'account_signup' %}">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit">Sign up</button>
+    </form>
+  {% else %}
+    <p>Signup form not available.</p>
+  {% endif %}
+{% endblock %}

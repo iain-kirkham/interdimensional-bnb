@@ -5,9 +5,9 @@ app_name = 'rooms'
 
 urlpatterns = [
     path('', RoomListView.as_view(), name='home'),
+    # Aliases for the homepage kept for backward compatibility
     path('home/', RoomListView.as_view(), name='home_page'),
     path('index/', RoomListView.as_view(), name='index'),
-    path('<int:pk>/', RoomDetailView.as_view(), name='detail'),
     path("<int:room_id>/book/", book_room, name="book_room"),
     path(
         "booking/<int:booking_id>/confirmation/",

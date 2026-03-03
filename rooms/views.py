@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Room, Booking
 from .forms import BookingForm
 
@@ -14,6 +15,25 @@ class RoomDetailView(DetailView):
     model = Room
     template_name = 'room_detail/room_detail.html'
     context_object_name = 'room'
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'profile/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        # Attempt to find bookings matching the current user's username or full name
+        username = user.get_username()
+        full_name = f"{user.first_name} {user.last_name}".strip()
+        bookings = Booking.objects.none()
+        if username:
+            bookings = Booking.objects.filter(guest_name__icontains=username)
+        if full_name:
+            bookings = bookings | Booking.objects.filter(guest_name__icontains=full_name)
+        context['user'] = user
+        context['bookings'] = bookings.distinct()
+        return context
 
 
 def book_room(request, room_id):
@@ -37,6 +57,6 @@ def book_room(request, room_id):
 
 def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id)
-    return render(request, "booking/booking.html", {
+    return render(request, "booking/booking_confirmation.html", {
         "booking": booking,
     })
