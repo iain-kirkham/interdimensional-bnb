@@ -1,5 +1,7 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from django.views.generic import ListView
+from django.contrib.auth.decorators import login_required
+from django.views.generic import ListView, DetailView, TemplateView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Room, Booking
 from .forms import BookingForm
 from .utils import apply_time_dilation
@@ -7,10 +9,29 @@ from .utils import apply_time_dilation
 
 class RoomListView(ListView):
     model = Room
-    template_name = 'rooms/room_list.html'
+    template_name = 'home/index.html'
     context_object_name = 'rooms'
 
 
+class RoomDetailView(DetailView):
+    model = Room
+    template_name = 'room_detail/room_detail.html'
+    context_object_name = 'room'
+
+
+class ProfileView(LoginRequiredMixin, TemplateView):
+    template_name = 'profile/profile.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        bookings = Booking.objects.filter(guest=user)
+        context['user'] = user
+        context['bookings'] = bookings.distinct()
+        return context
+
+
+@login_required
 def book_room(request, room_id):
     """
     Handles the booking form for a specific room.
@@ -31,6 +52,9 @@ def book_room(request, room_id):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.room = room
+            booking.guest = request.user
+            if not booking.guest_name:
+                booking.guest_name = request.user.get_username()
 
             # Apply time dilation
             data = apply_time_dilation(booking)
@@ -42,23 +66,23 @@ def book_room(request, room_id):
     else:
         form = BookingForm()
 
-    return render(request, "rooms/booking.html", {
+    return render(request, "booking/booking.html", {
         "room": room,
         "form": form,
     })
 
 
+@login_required
 def booking_confirmation(request, booking_id):
     """
     Displays the final booking details, including both the original and
     dimension-adjusted values. Also surfaces any warnings or physics data
     defined in the room's reality_rules JSON.
     """
-
-    booking = get_object_or_404(Booking, id=booking_id)
+    booking = get_object_or_404(Booking, id=booking_id, guest=request.user)
     rules = booking.room.reality_rules or {}
 
-    return render(request, "rooms/booking_confirmation.html", {
+    return render(request, "booking/booking_confirmation.html", {
         "booking": booking,
         "warnings": rules.get("warnings", []),
         "physics": rules.get("physics", {}),

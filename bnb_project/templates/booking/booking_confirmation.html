@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block title %}Booking Confirmation{% endblock %}
+{% block content %}
+  <h1>Booking Confirmation</h1>
+  <p>Thank you, {{ booking.guest_name }}. Your booking for <strong>{{ booking.room.name }}</strong> on <strong>{{ booking.check_in }}</strong> for <strong>{{ booking.nights }}</strong> night(s) is confirmed.</p>
+  <p>Booking ID: {{ booking.id }}</p>
+  <a href="{% url 'home' %}">Return to home</a>
+{% endblock %}

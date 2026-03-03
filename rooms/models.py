@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.core.validators import MinValueValidator
 from django.db import models
 
@@ -51,6 +52,13 @@ class Booking(models.Model):
     """
 
     room = models.ForeignKey("rooms.Room", on_delete=models.CASCADE)
+    guest = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="bookings",
+    )
     guest_name = models.CharField(max_length=100)
     check_in = models.DateField()
     nights = models.PositiveIntegerField(validators=[MinValueValidator(1)])
