@@ -31,6 +31,7 @@ class ProfileView(LoginRequiredMixin, TemplateView):
         return context
 
 
+@login_required
 def book_room(request, room_id):
     """
     Handles the booking form for a specific room.
@@ -51,8 +52,8 @@ def book_room(request, room_id):
         if form.is_valid():
             booking = form.save(commit=False)
             booking.room = room
-            if request.user.is_authenticated:
-                booking.guest = request.user
+            booking.guest = request.user
+            if not booking.guest_name:
                 booking.guest_name = request.user.get_username()
 
             # Apply time dilation
