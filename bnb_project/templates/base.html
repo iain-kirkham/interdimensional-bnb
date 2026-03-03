@@ -7,18 +7,53 @@
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
-    <nav>
-        <!-- Site-wide navigation bar -->
-        <a href="/">Home</a>
-        <a href="/rooms/">Rooms</a>
-        <a href="/booking/">Booking</a>
-        <a href="/profile/">Profile</a>
+    <nav class="main-nav">
+        <div class="nav-left">
+            <span class="brand">Interdimensional BnB</span>
+        </div>
+        <div class="nav-center">
+            <a href="/">Home</a>
+            <a href="/about/">About</a>
+            <a href="/spaces/">Spaces</a>
+            <a href="/booking/">Booking</a>
+            <a href="/profile/">Profile</a>
+        </div>
+        <div class="nav-right">
+            <a href="/signup/" class="nav-btn">Sign Up</a>
+            <a href="/login/" class="nav-btn">Login</a>
+        </div>
     </nav>
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer>
-        <p>&copy; 2026 Interdimensional BnB</p>
+    <footer class="main-footer">
+        <div class="footer-left">
+            <address>
+                Address<br>
+                space zoniat<br>
+                Bristol, XXX XXX<br>
+                The Universe
+            </address>
+            <div class="footer-social">
+                <a href="#">Twatter / X</a> |
+                <a href="#">Instergram</a> |
+                <a href="#">LinkedOn</a>
+            </div>
+        </div>
+        <div class="footer-center">
+            <div>Time Travel enquiries<br><a href="mailto:hello@universe.co">hello@universe.co</a></div>
+        </div>
+        <div class="footer-right">
+            <form class="newsletter-form">
+                <label for="newsletter-email">Subscribe to our fusionletter</label><br>
+                <input type="email" id="newsletter-email" placeholder="Your email">
+                <button type="submit">&rarr;</button>
+            </form>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy;2026 Interdimensional BnB</span>
+            <span>Built with <span style="color: red;">♥</span></span>
+        </div>
     </footer>
 </body>
 </html>
