@@ -80,3 +80,114 @@ docker compose exec web uv add --dev <package>
 docker compose exec web uv remove <package>
 docker compose exec web uv sync
 ```
+
+# Reality Rules JSON Schema
+
+The ***Room.reality_rules*** field stores dimension‑specific behaviour that affects how bookings are interpreted (e.g., time dilation, offset hours, warnings). This field is a flexible JSONField, so Django does not enforce structure automatically. To keep the system predictable, all rooms should follow the schema below.
+
+```
+{
+  "time": {
+    "dilation_factor": <number>,
+    "offset_hours": <number>,
+    "min_nights": <number>,
+    "max_nights": <number>
+  },
+  "physics": {
+    "gravity": "<string>",
+    "notes": "<string>"
+  },
+  "warnings": [
+    "<string>",
+    "<string>"
+  ]
+}
+```
+
+## Field meanings:
+- time.dilation_factor — Multiplier applied to the booked nights to compute adjusted nights.
+- time.offset_hours — Additional hours added to the adjusted checkout time.
+- time.min_nights / max_nights — Optional constraints for future validation or UI hints.
+- physics — Optional flavour information for display (not used in calculations).
+- warnings — Optional list of strings shown on the booking confirmation page.
+
+## Example:
+
+```
+{
+  "time": {
+    "dilation_factor": 1.5,
+    "offset_hours": 4
+  },
+  "physics": {
+    "gravity": "0.8g",
+    "notes": "Guests may feel slightly taller upon return."
+  },
+  "warnings": [
+    "Avoid paradox loops",
+    "Clocks may behave unpredictably"
+  ]
+}
+
+```
+
+## Notes
+- All keys are optional; missing values fall back to safe defaults.
+- The backend logic uses .get() lookups, so malformed or partial JSON will not break the system.
+- This schema is a team convention, not a strict validator. Future versions may add validation if needed.
+
+
+# Booking Adjustment Overview
+
+When a guest books a room, the system calculates both the original stay length (as entered by the user) and the dimension‑adjusted stay length based on the room’s reality_rules. These adjusted values are stored on the Booking model and displayed on the confirmation page.
+
+## Inputs
+- User‑entered nights — the number of nights the guest intends to stay.
+- Room.reality_rules — JSON defining how time behaves in that dimension.
+
+## Outputs
+- adjusted_nights — the number of nights after applying time dilation.
+- adjusted_checkout — the checkout datetime after applying dilation and offsets.
+- warnings — optional messages shown to the user.
+
+## Calculation Steps
+
+1. Extract time rules: <br>
+The backend reads the time section of the room’s reality_rules:
+    - dilation_factor (default: 1)
+    - offset_hours (default: 0)
+2. Compute adjusted nights:
+    - adjusted_nights = nights × dilation_factor
+3. Compute adjusted checkout:
+    The system adds the following to the checkout:
+    - adjusted_nights (in days)
+    - offset_hours (in hours)
+4. Store results:
+    The booking record stores:
+    - adjusted_nights (float)
+    - adjusted_checkout (datetime)
+5. Display warnings: <br>
+Any strings in reality_rules["warnings"] are shown on the confirmation page.
+
+### Example:
+
+```
+{
+  "time": {
+    "dilation_factor": 1.5,
+    "offset_hours": 4
+  },
+  "warnings": ["Temporal echoes may occur"]
+}
+```
+
+A booking of 2 nights becomes:
+- adjusted_nights: 3.0
+- adjusted_checkout: check‑in + 3 days + 4 hours
+- warnings: displayed on confirmation
+
+#### Notes:
+Notes
+- Missing keys fall back to defaults (dilation_factor=1, offset_hours=0).
+- The logic is implemented in rooms/utils.py as a reusable helper function.
+- The view applies the logic before saving the booking.
