@@ -8,7 +8,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("rooms", "0001_initial"),
+        ("rooms", "0002_booking_adjusted_checkout_booking_adjusted_nights_and_more"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
