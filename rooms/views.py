@@ -12,6 +12,18 @@ class RoomListView(ListView):
 
 
 def book_room(request, room_id):
+    """
+    Handles the booking form for a specific room.
+
+    - Loads the Room instance.
+    - Validates and saves the Booking form.
+    - Applies time-dilation rules via apply_time_dilation().
+    - Stores adjusted_nights and adjusted_checkout on the Booking.
+    - Redirects to the confirmation page on success.
+
+    Expects POST data containing guest_name, nights, and check_in.
+    """
+
     room = get_object_or_404(Room, id=room_id)
 
     if request.method == "POST":
@@ -37,12 +49,17 @@ def book_room(request, room_id):
 
 
 def booking_confirmation(request, booking_id):
-    booking = get_object_or_404(Booking, id=booking_id)
+    """
+    Displays the final booking details, including both the original and
+    dimension-adjusted values. Also surfaces any warnings or physics data
+    defined in the room's reality_rules JSON.
+    """
 
+    booking = get_object_or_404(Booking, id=booking_id)
     rules = booking.room.reality_rules or {}
-    warnings = rules.get("warnings", [])
 
     return render(request, "rooms/booking_confirmation.html", {
         "booking": booking,
-        "warnings": warnings,
+        "warnings": rules.get("warnings", []),
+        "physics": rules.get("physics", {}),
     })
