@@ -13,8 +13,41 @@ class RoomListView(ListView):
     context_object_name = "rooms"
 
     def get_queryset(self):
-        # Exclude rooms flagged as collapsing/unsafe from public listings
-        return Room.objects.filter(is_collapsing=False)
+        # Start with non-collapsing rooms
+        qs = Room.objects.filter(is_collapsing=False)
+
+        params = self.request.GET
+
+        # Filter by gravity (JSONField lookup)
+        gravity = params.get("gravity")
+        if gravity:
+            qs = qs.filter(reality_rules__physics__gravity__icontains=gravity)
+
+        # Filter by dilation factor range
+        min_dilation = params.get("min_dilation")
+        if min_dilation:
+            try:
+                qs = qs.filter(
+                    reality_rules__time__dilation_factor__gte=float(min_dilation)
+                )
+            except (ValueError, TypeError):
+                pass
+
+        max_dilation = params.get("max_dilation")
+        if max_dilation:
+            try:
+                qs = qs.filter(
+                    reality_rules__time__dilation_factor__lte=float(max_dilation)
+                )
+            except (ValueError, TypeError):
+                pass
+
+        # Filter by dimension code
+        dimension = params.get("dimension")
+        if dimension:
+            qs = qs.filter(dimension_code__icontains=dimension)
+
+        return qs
 
 
 class RoomDetailView(DetailView):
