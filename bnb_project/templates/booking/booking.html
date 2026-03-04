@@ -1,55 +1,61 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Booking{% endblock %}
 {% block content %}
     <h1>Book This Room</h1>
     <div class="booking-card">
-        <div class="booking-room-info">
-            <h2>{{ room.name }}</h2>
-            <p>{{ room.description }}</p>
-            <p><strong>Dimension:</strong> {{ room.dimension_code }}</p>
-            <p><strong>Price per night:</strong> ${{ room.price_per_night }}</p>
-            {% if room.reality_rules.physics.gravity %}
-                <p><strong>Gravity:</strong> {{ room.reality_rules.physics.gravity }}</p>
-            {% endif %}
-            {% if room.reality_rules.physics.notes %}
-                <p><strong>Notes:</strong> {{ room.reality_rules.physics.notes }}</p>
-            {% endif %}
-        </div>
-        <form method="post" class="booking-form">
-            {% csrf_token %}
-            <div class="form-group">
-                <label for="id_guest_name">Guest Name</label>
-                {{ form.guest_name }}
-            </div>
-            <div class="form-group">
-                <label for="id_check_in">Check-in Date</label>
-                {{ form.check_in }}
-            </div>
-            <div class="form-group">
-                <label for="id_nights">Nights</label>
-                {{ form.nights }}
-                {% if room.reality_rules.time.min_nights or room.reality_rules.time.max_nights %}
-                    <small>
-                        {% if room.reality_rules.time.min_nights %}
-                            Min: {{ room.reality_rules.time.min_nights }} nights
+        <div class="booking-card-content">
+            <div class="booking-room-info">
+                <h2>{{ room.name }}</h2>
+                <p>{{ room.description }}</p>
+                <p><strong>Dimension:</strong> {{ room.dimension_code }}</p>
+                <p><strong>Price per night:</strong> ${{ room.price_per_night }}</p>
+                {% if room.reality_rules.physics.gravity %}
+                    <p><strong>Gravity:</strong> {{ room.reality_rules.physics.gravity }}</p>
+                {% endif %}
+                {% if room.reality_rules.physics.notes %}
+                    <p><strong>Notes:</strong> {{ room.reality_rules.physics.notes }}</p>
+                {% endif %}
+                <form method="post" class="booking-form">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="id_guest_name">Guest Name</label>
+                        {{ form.guest_name }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_check_in">Check-in Date</label>
+                        {{ form.check_in }}
+                    </div>
+                    <div class="form-group">
+                        <label for="id_nights">Nights</label>
+                        {{ form.nights }}
+                        {% if room.reality_rules.time.min_nights or room.reality_rules.time.max_nights %}
+                            <small>
+                                {% if room.reality_rules.time.min_nights %}
+                                    Min: {{ room.reality_rules.time.min_nights }} nights
+                                {% endif %}
+                                {% if room.reality_rules.time.max_nights %}
+                                    Max: {{ room.reality_rules.time.max_nights }} nights
+                                {% endif %}
+                            </small>
                         {% endif %}
-                        {% if room.reality_rules.time.max_nights %}
-                            Max: {{ room.reality_rules.time.max_nights }} nights
-                        {% endif %}
-                    </small>
+                    </div>
+                    <button type="submit" class="book-btn">Book</button>
+                </form>
+                {% if room.reality_rules.warnings %}
+                    <div class="booking-warnings">
+                        <h3>Warnings</h3>
+                        <ul>
+                            {% for warning in room.reality_rules.warnings %}
+                                <li>{{ warning }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
                 {% endif %}
             </div>
-            <button type="submit" class="book-btn">Book</button>
-        </form>
-        {% if room.reality_rules.warnings %}
-            <div class="booking-warnings">
-                <h3>Warnings</h3>
-                <ul>
-                    {% for warning in room.reality_rules.warnings %}
-                        <li>{{ warning }}</li>
-                    {% endfor %}
-                </ul>
+            <div class="booking-room-image">
+                <img src="{% static 'img/gravity-room.jpg' %}" alt="Gravity Room" />
             </div>
-        {% endif %}
+        </div>
     </div>
 {% endblock %}
