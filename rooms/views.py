@@ -29,7 +29,9 @@ class RoomListView(ListView):
         if min_dilation:
             try:
                 qs = qs.filter(
-                    reality_rules__time__dilation_factor__gte=float(min_dilation)
+                    reality_rules__time__dilation_factor__gte=float(
+                        min_dilation
+                    )
                 )
             except (ValueError, TypeError):
                 pass
@@ -38,7 +40,9 @@ class RoomListView(ListView):
         if max_dilation:
             try:
                 qs = qs.filter(
-                    reality_rules__time__dilation_factor__lte=float(max_dilation)
+                    reality_rules__time__dilation_factor__lte=float(
+                        max_dilation
+                    )
                 )
             except (ValueError, TypeError):
                 pass
@@ -96,7 +100,8 @@ def book_room(request, room_id):
         raise Http404("Room not available")
 
     if request.method == "POST":
-        form = BookingForm(request.POST)
+        # Pass Room into the form for min/max validation
+        form = BookingForm(request.POST, room=room)
         if form.is_valid():
             booking = form.save(commit=False)
             booking.room = room
@@ -112,7 +117,7 @@ def book_room(request, room_id):
             booking.save()
             return redirect("booking_confirmation", booking_id=booking.id)
     else:
-        form = BookingForm()
+        form = BookingForm(room=room)
 
     return render(
         request,
