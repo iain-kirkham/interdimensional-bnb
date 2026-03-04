@@ -12,9 +12,20 @@ class RoomListView(ListView):
     model = Room
     template_name = "home/index.html"
     context_object_name = "rooms"
-
+    
     def get_queryset(self):
-        # Start with non-collapsing rooms
+        """
+        Return non-collapsing Room objects filtered by GET parameters.
+
+        Supported query parameters:
+        - gravity - substring match against
+          reality_rules['physics']['gravity'].
+        - min_dilation / max_dilation — numeric bounds on
+          reality_rules['time']['dilation_factor'].
+        - dimension — substring match against dimension_code.
+
+        Malformed or non-numeric values for numeric filters are ignored.
+        """
         qs = Room.objects.filter(is_collapsing=False)
 
         params = self.request.GET
@@ -61,6 +72,13 @@ class RoomDetailView(DetailView):
     context_object_name = "room"
 
     def get_object(self, queryset=None):
+        """
+        Return the Room instance for this view.
+
+        If the room is marked is_collapsing it is treated as not found
+        and Http404 is raised to prevent access.
+        """
+
         obj = super().get_object(queryset)
         if getattr(obj, "is_collapsing", False):
             raise Http404("Room not found")
@@ -71,6 +89,13 @@ class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = "profile/profile.html"
 
     def get_context_data(self, **kwargs):
+        """
+        Add the authenticated user and their bookings to the context.
+
+        Adds user and bookings (distinct queryset) for use in the
+        profile template.
+        """
+
         context = super().get_context_data(**kwargs)
         user = self.request.user
         bookings = Booking.objects.filter(guest=user)
