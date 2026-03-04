@@ -1,25 +1,168 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    {% load static %}
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Interdimensional BnB{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+        {% load static %}
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <title>{% block title %}home page{% endblock %}</title>
+
+        <!-- Google Fonts -->
+        <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500&family=Inter:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500&display=swap" rel="stylesheet">
+   
+        <!-- Bootstrap 5 CSS -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    
+        <!-- Custom CSS -->
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}" />
+
+        {% block head_extra %}{% endblock %}
 </head>
+
 <body>
-    <nav>
-        <!-- Site-wide navigation bar -->
-        <a href="/">Home</a>
-        <a href="/rooms/">Rooms</a>
-        <a href="/booking/">Booking</a>
-        <a href="/profile/">Profile</a>
-    </nav>
+
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- Nav Bar -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <div id="menuBar" class="container-fluid">
+        <div class="row w-100 align-items-center">
+            <div class="col-4 d-flex align-items-center">
+                <a href="{% url 'home' %}" class="logo">Dimensions<br><i>Your place in the Universe</i><br></a>
+            </div>
+
+            <div class="col-4 d-flex justify-content-center">
+                <div class="menu-buttons gap-2">
+                    <a id="bookNowBtn" class="btn menu-link" href="{% url 'home' %}">SPACES</a>
+                    <a id="menuBtn" class="btn menu-link" href="{% url 'about' %}">EXPERIENCES</a>
+                    <a id="servicesBtn" class="btn menu-link" href="{% url 'profile' %}">SERVICES</a>
+                </div>
+            </div>
+            <div class="col-4 d-flex justify-content-end align-items-center">
+                <div class="menu-buttons gap-2">
+                    <a id="faqBtn" class="btn menu-link" href="{% url 'about' %}#faq">FAQ</a>
+                </div>
+                <div class="nav-mobile-dots ms-3" id="mobileDots">
+                    <div class="nav-mobile-dot"></div>
+                    <div class="nav-mobile-dot"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- Nav Modal Popup Section  -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <div class="nav-modal" id="navModal">
+        <div class="nav-modal-content">
+            <button class="nav-modal-close" id="navModalClose">CLOSE &bull; &bull;</button>
+            <nav class="nav-modal-links">
+                <a href="{% url 'about' %}">Help Centre</a>
+                <a href="{% url 'about' %}">Giftcards</a>
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'signup' %}">Signup</a>
+            </nav>
+            <div class="nav-modal-newsletter">
+                <div class="newsletter-title">Subscribe to our newsletter</div>
+                <form class="newsletter-form">
+                    <input type="email" placeholder="Your email" required>
+                    <button type="submit">&rarr;</button>
+                </form>
+            </div>
+            <div class="nav-modal-labs">
+                <a href="#labs" class="labs-link">PLAN YOUR JOURNEY <span style="float:right">&rarr;</span></a>
+            </div>
+        </div>
+    </div>
+
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- JS for Nav Modal Popup & Buttons -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <script>
+        const mobileDots = document.getElementById('mobileDots');
+        const menuBtn = document.getElementById('menuBtn');
+        const navModal = document.getElementById('navModal');
+        const navModalClose = document.getElementById('navModalClose');
+        function showModal(e) {
+            e.stopPropagation();
+            navModal.classList.add('show');
+        }
+        function hideModal() {
+            navModal.classList.remove('show');
+        }
+        if (mobileDots && menuBtn && navModal && navModalClose) {
+            mobileDots.addEventListener('click', showModal);
+            // menuBtn does NOT open the modal anymore
+            navModalClose.addEventListener('click', hideModal);
+            // Hide modal when clicking outside content
+            navModal.addEventListener('click', function (e) {
+                if (e.target === navModal) hideModal();
+            });
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape') hideModal();
+            });
+        }
+
+        // Add active class to nav bar items (buttons and links)
+        document.querySelectorAll('#menuBar .menu-buttons button, #menuBar .menu-buttons a.menu-link').forEach(function(el) {
+            el.addEventListener('click', function() {
+                document.querySelectorAll('#menuBar .menu-buttons button, #menuBar .menu-buttons a.menu-link').forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                el.classList.add('active');
+            });
+        });
+    </script>
+
+
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- Main Content Section -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+
     <main>
-        {% block content %}{% endblock %}
+        <div class="content-area">
+            <div class="overlay-wellness-calm">
+                <!-- Page-specific content injected here -->
+                {% block content %}{% endblock %}
+            </div>
+        </div>
     </main>
-    <footer>
-        <p>&copy; 2026 Interdimensional BnB</p>
+
+
+ <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <!-- Footer Section -->
+    <!-- //////////////////////////////////////////////////////////////////////////// -->
+    <footer class="footer-section bg-dark text-light py-5">
+        <div class="container-fluid">
+            <div class="row align-items-center">
+                <div class="col-md-3 col-12 mb-3 mb-md-0">
+                    <div class="footer-scroll-text small" style="opacity:0.8;">BE INSPIRED<br></div>
+                </div>
+                <div class="col-md-6 col-12 text-center mb-3 mb-md-0">
+                    <h2 class="footer-title" style="font-size:2.8em; font-weight:500; letter-spacing:0.02em;">YOUR NEXT ADVENTURE IS ...
+                    </h2>
+                </div>
+                <div class="col-md-3 col-12 text-end">
+                    <div class="footer-next-page d-flex align-items-center justify-content-end">
+                        <span class="me-3" style="font-size:1em;">EXPLORE</span>
+                        <div style="flex:1; max-width:120px; height:2px; background:#333; margin-right:8px;"></div>
+                        <span style="font-size:1.5em;">&rarr;</span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 d-flex justify-content-between align-items-center">
+                    <span class="footer-plus" style="font-size:2em; color:#fff;">+</span>
+                    <span class="footer-plus" style="font-size:2em; color:#fff;">+</span>
+                    <span class="footer-plus" style="font-size:2em; color:#fff;">+</span>
+                    <span class="footer-plus" style="font-size:2em; color:#fff;">+</span>
+                    <span class="footer-plus" style="font-size:2em; color:#fff;">+</span>
+                </div>
+            </div>
+        </div>
     </footer>
+
+    {% block scripts %}{% endblock %}
+
 </body>
+
 </html>
