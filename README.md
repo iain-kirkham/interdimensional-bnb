@@ -230,3 +230,41 @@ To improve user experience, templates may optionally display:
 - a hint near the nights input field.
 
 The backend provides no automatic UI hints; this is left to the template layer.
+
+## Developer Notes: How Night‑Range Validation Works
+The booking form now enforces optional minimum and maximum night limits defined in each room’s reality_rules["time"] block. This validation happens inside the form, not the view, so the view must pass the room instance into the form.
+
+### How the view passes the room
+The booking view instantiates the form like this:
+
+```
+form = BookingForm(request.POST, room=room)
+```
+
+and for GET requests:
+
+```
+form = BookingForm(room=room)
+```
+
+This allows the form to read:
+```
+room.reality_rules["time"]["min_nights"]
+room.reality_rules["time"]["max_nights"]
+```
+
+and validate the submitted nights value accordingly.
+
+### What the form enforces
+- If min_nights exists, the user must enter at least that many nights.
+- If max_nights exists, the user must enter no more than that many nights.
+- If neither exists, no range validation is applied.
+- Invalid submissions re-render the form with an error message.
+- Valid submissions continue to time‑dilation and saving.
+
+### What the template may want to display
+The backend does not automatically show hints, but the template can optionally display:
+- the allowed range (e.g., “Stay must be between 2 and 5 nights”), or
+- a small note near the nights input field.
+
+This is purely a UX decision; the backend already enforces correctness.
