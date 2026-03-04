@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from .models import Room, Booking
 from .forms import BookingForm
 from .utils import apply_time_dilation
@@ -55,6 +56,12 @@ class RoomDetailView(DetailView):
     template_name = "room_detail/room_detail.html"
     context_object_name = "room"
 
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if getattr(obj, "is_collapsing", False):
+            raise Http404("Room not found")
+        return obj
+
 
 class ProfileView(LoginRequiredMixin, TemplateView):
     template_name = "profile/profile.html"
@@ -83,6 +90,10 @@ def book_room(request, room_id):
     """
 
     room = get_object_or_404(Room, id=room_id)
+
+    # Prevent direct booking of collapsing rooms
+    if getattr(room, "is_collapsing", False):
+        raise Http404("Room not available")
 
     if request.method == "POST":
         form = BookingForm(request.POST)
