@@ -2,6 +2,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.views.generic import ListView, DetailView, TemplateView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from .models import Room, Booking
 from .forms import BookingForm
 from .utils import apply_time_dilation
@@ -9,25 +10,68 @@ from .utils import apply_time_dilation
 
 class RoomListView(ListView):
     model = Room
-    template_name = 'home/index.html'
-    context_object_name = 'rooms'
+    template_name = "home/index.html"
+    context_object_name = "rooms"
+
+    def get_queryset(self):
+        # Start with non-collapsing rooms
+        qs = Room.objects.filter(is_collapsing=False)
+
+        params = self.request.GET
+
+        # Filter by gravity (JSONField lookup)
+        gravity = params.get("gravity")
+        if gravity:
+            qs = qs.filter(reality_rules__physics__gravity__icontains=gravity)
+
+        # Filter by dilation factor range
+        min_dilation = params.get("min_dilation")
+        if min_dilation:
+            try:
+                qs = qs.filter(
+                    reality_rules__time__dilation_factor__gte=float(min_dilation)
+                )
+            except (ValueError, TypeError):
+                pass
+
+        max_dilation = params.get("max_dilation")
+        if max_dilation:
+            try:
+                qs = qs.filter(
+                    reality_rules__time__dilation_factor__lte=float(max_dilation)
+                )
+            except (ValueError, TypeError):
+                pass
+
+        # Filter by dimension code
+        dimension = params.get("dimension")
+        if dimension:
+            qs = qs.filter(dimension_code__icontains=dimension)
+
+        return qs
 
 
 class RoomDetailView(DetailView):
     model = Room
-    template_name = 'room_detail/room_detail.html'
-    context_object_name = 'room'
+    template_name = "room_detail/room_detail.html"
+    context_object_name = "room"
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        if getattr(obj, "is_collapsing", False):
+            raise Http404("Room not found")
+        return obj
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = 'profile/profile.html'
+    template_name = "profile/profile.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         bookings = Booking.objects.filter(guest=user)
-        context['user'] = user
-        context['bookings'] = bookings.distinct()
+        context["user"] = user
+        context["bookings"] = bookings.distinct()
         return context
 
 
@@ -46,6 +90,10 @@ def book_room(request, room_id):
     """
 
     room = get_object_or_404(Room, id=room_id)
+
+    # Prevent direct booking of collapsing rooms
+    if getattr(room, "is_collapsing", False):
+        raise Http404("Room not available")
 
     if request.method == "POST":
         form = BookingForm(request.POST)
@@ -66,10 +114,14 @@ def book_room(request, room_id):
     else:
         form = BookingForm()
 
-    return render(request, "booking/booking.html", {
-        "room": room,
-        "form": form,
-    })
+    return render(
+        request,
+        "booking/booking.html",
+        {
+            "room": room,
+            "form": form,
+        },
+    )
 
 
 @login_required
@@ -82,8 +134,12 @@ def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, guest=request.user)
     rules = booking.room.reality_rules or {}
 
-    return render(request, "booking/booking_confirmation.html", {
-        "booking": booking,
-        "warnings": rules.get("warnings", []),
-        "physics": rules.get("physics", {}),
-    })
+    return render(
+        request,
+        "booking/booking_confirmation.html",
+        {
+            "booking": booking,
+            "warnings": rules.get("warnings", []),
+            "physics": rules.get("physics", {}),
+        },
+    )
