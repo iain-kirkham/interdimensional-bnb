@@ -19,6 +19,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView, RedirectView
 from rooms.views import RoomListView, RoomDetailView, ProfileView, book_room
+from bnb_project.views import account_login, account_signup
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -40,5 +41,9 @@ urlpatterns = [
         name="signup",
     ),
     path("booking/<int:room_id>/", book_room, name="booking"),
+
+
+    path("accounts/login/", account_login, name="account_login"),
+    path('accounts/signup/', account_signup, name='account_signup'),
     path("", include("rooms.urls")),
 ]
