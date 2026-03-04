@@ -9,25 +9,29 @@ from .utils import apply_time_dilation
 
 class RoomListView(ListView):
     model = Room
-    template_name = 'home/index.html'
-    context_object_name = 'rooms'
+    template_name = "home/index.html"
+    context_object_name = "rooms"
+
+    def get_queryset(self):
+        # Exclude rooms flagged as collapsing/unsafe from public listings
+        return Room.objects.filter(is_collapsing=False)
 
 
 class RoomDetailView(DetailView):
     model = Room
-    template_name = 'room_detail/room_detail.html'
-    context_object_name = 'room'
+    template_name = "room_detail/room_detail.html"
+    context_object_name = "room"
 
 
 class ProfileView(LoginRequiredMixin, TemplateView):
-    template_name = 'profile/profile.html'
+    template_name = "profile/profile.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         user = self.request.user
         bookings = Booking.objects.filter(guest=user)
-        context['user'] = user
-        context['bookings'] = bookings.distinct()
+        context["user"] = user
+        context["bookings"] = bookings.distinct()
         return context
 
 
@@ -66,10 +70,14 @@ def book_room(request, room_id):
     else:
         form = BookingForm()
 
-    return render(request, "booking/booking.html", {
-        "room": room,
-        "form": form,
-    })
+    return render(
+        request,
+        "booking/booking.html",
+        {
+            "room": room,
+            "form": form,
+        },
+    )
 
 
 @login_required
@@ -82,8 +90,12 @@ def booking_confirmation(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, guest=request.user)
     rules = booking.room.reality_rules or {}
 
-    return render(request, "booking/booking_confirmation.html", {
-        "booking": booking,
-        "warnings": rules.get("warnings", []),
-        "physics": rules.get("physics", {}),
-    })
+    return render(
+        request,
+        "booking/booking_confirmation.html",
+        {
+            "booking": booking,
+            "warnings": rules.get("warnings", []),
+            "physics": rules.get("physics", {}),
+        },
+    )
