@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Rooms{% endblock %}
+
+{% block content %}
+
+<section class="container-fluid">
+
+    <h2 class="hero-heading">Choose Your Next Stay!</h2>
+
+    <div class="row">
+
+        {% for room in rooms %}
+        <div class="col-12 col-md-6 px-4 mb-4">
+
+            <a href="{% url 'rooms:room_detail' room.pk %}" style="text-decoration:none;color:inherit;">
+
+                <div class="card card-padded">
+
+                    {# TEMPORARY STATIC IMAGE — replace later if rooms get image fields #}
+                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="{{ room.name }}">
+
+                    <div class="card-body">
+
+                        <h5 class="card-title">{{ room.name }}</h5>
+
+                        <p class="card-text">
+                            {{ room.description }}
+                        </p>
+
+                        <p class="card-text">
+                            <strong>Price per night:</strong> £{{ room.price_per_night }}
+                        </p>
+
+                        {% with warnings=room.reality_rules.warnings %}
+                            {% if warnings %}
+                                <p class="card-text">
+                                    <strong>Notes:</strong> {{ warnings.0 }}
+                                </p>
+                            {% endif %}
+                        {% endwith %}
+
+                    </div>
+                </div>
+
+            </a>
+
+        </div>
+        {% endfor %}
+
+    </div>
+
+</section>
+
+{% endblock %}
