@@ -6,8 +6,72 @@ A Django-based booking platform for travelers across the multiverse. Manage list
 # 🛠 Tech Stack
 
 - Language: Python 3.12 (via uv)
+- Framework: Django 4.2
+- CSS Framework: Bootstrap
 - Database: PostgreSQL 15
 - Containerisation: Docker & Docker Compose
+
+
+## User Stories
+
+### Travelers
+- As a traveler, I can browse available rooms across dimensions and view each room's `reality_rules` and metadata so I can find spaces that match my biological and temporal needs (for example: breathable atmosphere, acceptable gravity).
+- As a traveler, I can filter rooms by reality rules (gravity, time dilation, dimension code, warnings) so I avoid stays with dangerous temporal or physical properties.
+- As a traveler, I can view portal previews (images) and key room details before booking so I know what to expect on arrival.
+- As a traveler, I can select check-in date and number of nights and complete a booking; the system will compute and store `adjusted_nights` and `adjusted_checkout` using the room's `reality_rules`.
+
+### Hosts
+- As a host, I can create and manage room listings including `name`, `dimension_code`, `price_per_night`, `description`, images, and `reality_rules` so guests understand the room's physics and constraints.
+- As a host, I can set a price in Universal Credits per night and update availability to reflect maintenance or safety windows.
+- As a host, I can view upcoming bookings for my rooms so I can prepare the space (for example: decontamination, portal calibration).
+
+### Admins
+- As an admin, I can flag rooms or dimensions as `is_collapsing` (unsafe) to remove them from public listings and protect users.
+- As an admin, I can manage user accounts (suspend, restore, or remove) to enforce platform safety and block timeline violators.
+
+## Entity Relationship Diagram (ERD)
+
+The diagram below shows the entities for the interdimensional bnb project, with the rooms, booking and user tables along with their associate fields.
+
+```mermaid
+erDiagram
+  ROOM {
+    int id
+    string name
+    string dimension_code
+    boolean is_collapsing
+    decimal price_per_night
+    text description
+    json reality_rules
+  }
+  BOOKING {
+    int id
+    int room_id
+    int guest_id
+    string guest_name
+    date check_in
+    int nights
+    float adjusted_nights
+    datetime adjusted_checkout
+    datetime created_at
+  }
+  USER {
+    int id
+    string username
+    string email
+  }
+
+  ROOM ||--o{ BOOKING : has
+  USER ||--o{ BOOKING : books
+```
+
+- `ROOM` corresponds to `rooms.Room` and stores listing details and `reality_rules`.
+- `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
+
+
+# 📦 Steup Locally and Dependency Management
+
+## Setup Locally
 
 1. Clone & Setup Environment
 
@@ -39,13 +103,13 @@ docker-compose exec web uv run python manage.py migrate
 docker-compose exec web uv run python manage.py createsuperuser
 ```
 
-# 📦 Dependency Management
+## Dependency Management
 
 We use uv for lightning-fast dependency management. Because of our Docker volume mapping, changes sync both ways.
 
 Add a new package:
 ```bash
-    docker-compose exec web uv add <package-name>
+docker-compose exec web uv add <package-name>
 ```
 
 Sync environment (if a teammate added a package):
@@ -53,7 +117,6 @@ Sync environment (if a teammate added a package):
 ```bash
 docker-compose exec web uv sync
 ```
-
 
 # Command cheat sheet
 
@@ -80,6 +143,54 @@ docker compose exec web uv add --dev <package>
 docker compose exec web uv remove <package>
 docker compose exec web uv sync
 ```
+
+## Deploying to Heroku
+This repository supports two Heroku deployment workflows; the Dashboard (GitHub integration) is the simplest and recommended for most users. The app already includes a `Procfile` with a `release` step that runs migrations automatically.
+
+Recommended: Heroku Dashboard (GitHub integration)
+
+1. Push your code to GitHub (for example `origin/main`).
+2. Open your app in the Heroku dashboard and go to the "Deploy" tab.
+3. Under "Deployment method" choose "GitHub" and connect your GitHub account.
+4. Select the `interdimensional-bnb` repository and the branch to deploy (e.g., `main`).
+5. Optionally enable "Automatic deploys" to build on every push, or click "Deploy Branch" for a manual deploy.
+
+Quick CLI (alternative)
+
+If you prefer CLI flow, use either the Container Registry (Docker) or Heroku Git. Minimal examples:
+
+Container (Docker):
+```bash
+heroku login
+heroku container:login
+heroku create my-interdimensional-bnb
+heroku container:push web -a my-interdimensional-bnb
+heroku container:release web -a my-interdimensional-bnb
+```
+
+Heroku Git (buildpack):
+```bash
+heroku create my-interdimensional-bnb
+git push heroku main
+```
+
+Config vars and addons (what to set)
+- `SECRET_KEY` — required; add in Dashboard → Settings → Config Vars as `SECRET_KEY`.
+- `DEBUG` — set to `False` in production.
+- `ALLOWED_HOSTS` — comma-delimited hostnames for deployment.
+- `DATABASE_URL` — optional: Heroku Postgres addon will set this automatically when provisioned. You may instead point `DATABASE_URL` to an external DB.
+
+Checklist before first deploy
+- Ensure `Procfile` is present in repo root (this repo includes `web: gunicorn bnb_project.wsgi` and a `release` migration step).
+- Add sensitive config vars in the Heroku Dashboard (`SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, and `DATABASE_URL` if not using the addon).
+- Provision Heroku Postgres under "Resources" if you want Heroku to manage the DB (optional).
+- Confirm static file handling: `collectstatic` runs during build; or run `heroku run python manage.py collectstatic` after deploy if needed.
+
+Notes
+- The release phase (`release: python manage.py migrate`) runs automatically after successful deploys and will apply migrations.
+- Use the Dashboard for quick rebuilds, config management, and to enable automatic deploys from GitHub.
+- For CI/CD with tests and more control, add a GitHub Actions workflow later.
+
 
 # Reality Rules JSON Schema
 
@@ -268,3 +379,4 @@ The backend does not automatically show hints, but the template can optionally d
 - a small note near the nights input field.
 
 This is purely a UX decision; the backend already enforces correctness.
+
