@@ -124,10 +124,33 @@ def book_room(request, room_id):
     if getattr(room, "is_collapsing", False):
         raise Http404("Room not available")
 
+
     if request.method == "POST":
         # Pass Room into the form for min/max validation
         form = BookingForm(request.POST, room=room)
         if form.is_valid():
+            # Validate min_nights and max_nights from reality_rules JSON
+            nights = form.cleaned_data.get("nights")
+            rules = room.reality_rules or {}
+            time_rules = rules.get("time", {})
+            min_nights = time_rules.get("min_nights")
+            max_nights = time_rules.get("max_nights")
+            error = None
+            if min_nights is not None and nights < min_nights:
+                error = f"Minimum stay for this dimension is {min_nights} nights."
+            if max_nights is not None and nights > max_nights:
+                error = f"Maximum stay for this dimension is {max_nights} nights."
+            if error:
+                return render(
+                    request,
+                    "booking/booking.html",
+                    {
+                        "room": room,
+                        "form": form,
+                        "error": error,
+                    },
+                )
+
             booking = form.save(commit=False)
             booking.room = room
             booking.guest = request.user
