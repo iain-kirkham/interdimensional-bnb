@@ -15,6 +15,7 @@ from pathlib import Path
 import dj_database_url
 from dotenv import load_dotenv
 
+
 load_dotenv()
 
 
@@ -52,6 +53,7 @@ LOGOUT_REDIRECT_URL = "/"
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -136,7 +138,13 @@ STATICFILES_DIRS = [
     BASE_DIR / "bnb_project" / "static",
 ]
 
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+# Directory where `collectstatic` will collect static files for production
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Use WhiteNoise storage backend so Heroku (or any WSGI server) can serve
+# static files efficiently. Compressed storage avoids manifest resolution
+# issues during initial deployment.
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
