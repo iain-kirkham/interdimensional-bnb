@@ -208,5 +208,6 @@ marimo/_lsp/
 __marimo__/
 
 
-# static files directory for deployment only
-.staticfiles/
+# static files directory for deployment only #test 
+staticfiles/
+
