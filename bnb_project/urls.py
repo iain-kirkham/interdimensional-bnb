@@ -22,6 +22,7 @@ from rooms.views import RoomListView, RoomDetailView, ProfileView, book_room, bo
 from bnb_project.views import account_login, account_signup
 
 urlpatterns = [
+        path("rooms/", TemplateView.as_view(template_name="rooms/rooms.html"), name="browse_rooms"),
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path(
