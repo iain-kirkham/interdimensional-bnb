@@ -571,7 +571,7 @@ body {
   color: #fff;
   font-family: 'neue machina', Arial, sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 .hero-spotlight {
