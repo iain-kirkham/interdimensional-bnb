@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="room-detail {{ room.dimension_code }}">
+    <header class="room-header">
+        <h1>{{ room.name }}</h1>
+        <p class="dimension-code">Dimension: {{ room.dimension_code|upper }}</p>
+    </header>
+
+    <section class="room-image">
+        {% if room.image %}
+            <img src="{{ room.image.url }}" alt="{{ room.name }}">
+        {% else %}
+            <img src="{% static 'images/placeholder-room.jpg' %}" alt="Room image">
+        {% endif %}
+    </section>
+
+    <section class="room-description">
+        <h2>About this room</h2>
+        <p>{{ room.description }}</p>
+    </section>
+
+    <section class="room-physics">
+        {% if physics %}
+            <h2>Dimension Physics</h2>
+            <ul>
+                {% for key, value in physics.items %}
+                    <li><strong>{{ key|capfirst }}:</strong> {{ value }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+
+    <section class="room-warnings">
+        {% if warnings %}
+            <h2>Warnings</h2>
+            <ul class="warnings-list">
+                {% for warning in warnings %}
+                    <li class="warning-item">{{ warning }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </section>
+
+    <section class="room-booking">
+        <h2>Book this room</h2>
+
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            {% if min_nights or max_nights %}
+                <p class="night-range-hint">
+                    {% if min_nights and max_nights %}
+                        Stay must be between {{ min_nights }} and {{ max_nights }} nights.
+                    {% elif min_nights %}
+                        Minimum stay: {{ min_nights }} nights.
+                    {% elif max_nights %}
+                        Maximum stay: {{ max_nights }} nights.
+                    {% endif %}
+                </p>
+            {% endif %}
+
+            <a href="{% url 'rooms:book_room' room.pk %}" class="btn btn-primary">
+                 Book now
+            </a>
+
+        </form>
+    </section>
+</div>
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="booking-list-container">
+
+    <header class="booking-list-header">
+        <h1>Your Bookings</h1>
+        <p>Review your interdimensional stays and upcoming adventures.</p>
+    </header>
+
+    {% if bookings %}
+        <table class="booking-table">
+            <thead>
+                <tr>
+                    <th>Room</th>
+                    <th>Check‑in</th>
+                    <th>Nights</th>
+                    <th>Adjusted Check‑out</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for booking in bookings %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'rooms:room_detail' booking.room.pk %}">
+                                {{ booking.room.name }}
+                            </a>
+                        </td>
+                        <td>{{ booking.check_in }}</td>
+                        <td>{{ booking.nights }}</td>
+                        <td>{{ booking.adjusted_check_out }}</td>
+                        <td>
+                            <a href="{% url 'rooms:booking_confirmation' booking.pk %}">
+                                View
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+    {% else %}
+        <p>You have no bookings yet.</p>
+    {% endif %}
+
+</div>
+{% endblock %}

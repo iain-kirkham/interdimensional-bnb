@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="room-list">
+
+    <header class="page-header">
+        <h1>Available Rooms</h1>
+        <p>Select a dimension to explore.</p>
+    </header>
+
+    <div class="room-grid">
+        {% for room in rooms %}
+        <div class="room-card {{ room.dimension_code }}">
+            
+            <div class="room-card-image">
+                {% if room.image %}
+                    <img src="{{ room.image.url }}" alt="{{ room.name }}">
+                {% else %}
+                    <img src="{% static 'images/placeholder-room.jpg' %}" alt="Room image">
+                {% endif %}
+            </div>
+
+            <div class="room-card-body">
+                <h2 class="room-name">{{ room.name }}</h2>
+                <p class="dimension-code">Dimension: {{ room.dimension_code|upper }}</p>
+
+                <p class="room-description">
+                    {{ room.description|truncatewords:20 }}
+                </p>
+
+                <p class="room-price">
+                    <strong>£{{ room.price_per_night }}</strong> per night
+                </p>
+
+                <a href="{% url 'rooms:room_detail' room.pk %}" class="btn btn-primary">
+                    View Room
+                </a>
+            </div>
+
+        </div>
+        {% empty %}
+        <p>No rooms available.</p>
+        {% endfor %}
+    </div>
+
+</div>
+{% endblock %}
