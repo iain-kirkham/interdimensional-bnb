@@ -145,73 +145,51 @@ docker compose exec web uv sync
 ```
 
 ## Deploying to Heroku
+This repository supports two Heroku deployment workflows; the Dashboard (GitHub integration) is the simplest and recommended for most users. The app already includes a `Procfile` with a `release` step that runs migrations automatically.
 
-This project can be deployed to Heroku either using the Docker Container Registry (recommended when you rely on the existing `Dockerfile`) or the standard Python buildpack (using the `Procfile`). The repository already includes a `Procfile` that runs `gunicorn` and performs migrations on release.
+Recommended: Heroku Dashboard (GitHub integration)
 
-Recommended quick steps (Heroku Container Registry)
+1. Push your code to GitHub (for example `origin/main`).
+2. Open your app in the Heroku dashboard and go to the "Deploy" tab.
+3. Under "Deployment method" choose "GitHub" and connect your GitHub account.
+4. Select the `interdimensional-bnb` repository and the branch to deploy (e.g., `main`).
+5. Optionally enable "Automatic deploys" to build on every push, or click "Deploy Branch" for a manual deploy.
 
+Quick CLI (alternative)
+
+If you prefer CLI flow, use either the Container Registry (Docker) or Heroku Git. Minimal examples:
+
+Container (Docker):
 ```bash
-# Build and push the Docker image to Heroku's Container Registry
 heroku login
 heroku container:login
 heroku create my-interdimensional-bnb
-heroku stack:set container -a my-interdimensional-bnb
-
-# Tag & push the web process (from repo root)
 heroku container:push web -a my-interdimensional-bnb
 heroku container:release web -a my-interdimensional-bnb
-
-# Add a Postgres database (optional)
-heroku addons:create heroku-postgresql:hobby-dev -a my-interdimensional-bnb
-
-# Set required environment variables (example)
-heroku config:set DJANGO_SECRET_KEY="your-secret" DEBUG=false -a my-interdimensional-bnb
-
-# Run migrations and create a superuser if needed
-heroku run python manage.py migrate -a my-interdimensional-bnb
-heroku run python manage.py createsuperuser -a my-interdimensional-bnb
-
-# Open app
-heroku open -a my-interdimensional-bnb
 ```
 
-Alternative: Deploy with the Python buildpack
-
+Heroku Git (buildpack):
 ```bash
-# Create app and set buildpack (if not auto-detected)
 heroku create my-interdimensional-bnb
-heroku buildpacks:set heroku/python -a my-interdimensional-bnb
-
-# Push via Heroku Git (ensure your main branch is the one you want to deploy)
 git push heroku main
-
-# Heroku will use the included Procfile:
-#   web: gunicorn bnb_project.wsgi
-# and the release phase will run: `python manage.py migrate`
-
-# Add Postgres, set config, and run management commands as above
-heroku addons:create heroku-postgresql:hobby-dev -a my-interdimensional-bnb
-heroku config:set DJANGO_SECRET_KEY="your-secret" DEBUG=false -a my-interdimensional-bnb
-heroku run python manage.py createsuperuser -a my-interdimensional-bnb
 ```
+
+Config vars and addons (what to set)
+- `SECRET_KEY` — required; add in Dashboard → Settings → Config Vars as `SECRET_KEY`.
+- `DEBUG` — set to `False` in production.
+- `ALLOWED_HOSTS` — comma-delimited hostnames for deployment.
+- `DATABASE_URL` — optional: Heroku Postgres addon will set this automatically when provisioned. You may instead point `DATABASE_URL` to an external DB.
+
+Checklist before first deploy
+- Ensure `Procfile` is present in repo root (this repo includes `web: gunicorn bnb_project.wsgi` and a `release` migration step).
+- Add sensitive config vars in the Heroku Dashboard (`SECRET_KEY`, `DEBUG`, `ALLOWED_HOSTS`, and `DATABASE_URL` if not using the addon).
+- Provision Heroku Postgres under "Resources" if you want Heroku to manage the DB (optional).
+- Confirm static file handling: `collectstatic` runs during build; or run `heroku run python manage.py collectstatic` after deploy if needed.
 
 Notes
-- The `Procfile` in this repo contains a `release` process that runs migrations automatically: `release: python manage.py migrate`.
-- Populate all required environment variables listed in `.env.example` on Heroku using `heroku config:set KEY=value`.
- - DATABASE_URL: This project uses `dj_database_url` and reads the database connection from the `DATABASE_URL` environment variable (see `bnb_project/settings.py`).
-  - The `heroku-postgresql` addon will automatically set `DATABASE_URL` when provisioned — however, this addon is optional. Alternatively:
-    - Provision an external Postgres instance (any provider) and set `DATABASE_URL` to that instance's URL.
-  - If you need to set it manually, use the full URL form: `postgres://USER:PASSWORD@HOST:PORT/NAME` and set it with:
-
-    ```bash
-    heroku config:set DATABASE_URL="postgres://USER:PASSWORD@HOST:PORT/NAME" -a my-interdimensional-bnb
-    ```
-  - For local development you can either keep using the discrete `DB_NAME`, `DB_USER`, etc. variables from `env.example`, or add a `DATABASE_URL` to your `.env` file. Example `DATABASE_URL` for the example `.env` values:
-
-    ```bash
-    DATABASE_URL=postgres://postgres:your_password_here@db:5432/bnb_db
-    ```
-- If you use the Container Registry approach, your Docker image should include any build steps required for static files; otherwise run `collectstatic` via `heroku run` or during image build.
+- The release phase (`release: python manage.py migrate`) runs automatically after successful deploys and will apply migrations.
+- Use the Dashboard for quick rebuilds, config management, and to enable automatic deploys from GitHub.
+- For CI/CD with tests and more control, add a GitHub Actions workflow later.
 
 
 # Reality Rules JSON Schema
