@@ -1,3 +1,52 @@
+.card-padded {
+  transition: transform 0.2s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.card-padded:hover {
+  transform: scale(1.04);
+  z-index: 2;
+}
+/* Overlay background for calm effect */
+.overlay-wellness-calm {
+  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px rgba(60, 60, 100, 0.08);
+  padding: 1.2rem 1rem 1rem 1rem;
+  margin: 1.5rem 0;
+  text-align: center;
+}
+
+/* Hero heading style */
+.hero-heading {
+  font-family: 'Space Grotesk', Inter, Plus Jakarta Sans, Arial, sans-serif;
+  font-size: 2.1rem;
+  font-weight: 600;
+  color: #22223b;
+  margin-bottom: 0.5rem;
+  letter-spacing: 0.02em;
+}
+
+/* Hero sub-heading style */
+.hero-sub-heading {
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 1.2rem;
+  font-weight: 400;
+  color: #3a3a5a;
+  margin-bottom: 0;
+  line-height: 1.5;
+}
+
+@media (max-width: 767.98px) {
+  .overlay-wellness-calm {
+    padding: 1.2rem 0.5rem 1rem 0.5rem;
+    border-radius: 0.7rem;
+  }
+  .hero-heading {
+    font-size: 1.3rem;
+  }
+  .hero-sub-heading {
+    font-size: 1rem;
+  }
+}
 /* Booking Confirmation Styles */
 .confirmation-card {
   background: #fff;
@@ -865,3 +914,65 @@ body {
     border: 2px dashed red;
     min-height: 50px;
 } */
+
+
+
+
+/* For Rooms page */
+
+.card-padded {
+   padding: 1.2rem 0.8rem 1.2rem 0.8rem;
+   border-radius: 1.1rem;
+   box-shadow: 0 2px 12px rgba(60, 60, 100, 0.07);
+   background: linear-gradient(120deg, #f8fafc 0%, #e0e7ff 100%);
+}
+
+/* Card image styling */
+.card-img-top {
+   border-top-left-radius: 1.1rem;
+   border-top-right-radius: 1.1rem;
+   object-fit: cover;
+   height: 180px;
+   width: 100%;
+   box-shadow: 0 2px 8px rgba(60, 60, 100, 0.06);
+}
+
+/* Card body */
+.card-body {
+   padding: 1.1rem 0.8rem;
+   text-align: center;
+}
+
+/* Card title */
+.card-title {
+   font-family: 'Space Grotesk', Inter, Plus Jakarta Sans, Arial, sans-serif;
+   font-size: 1.3rem;
+   font-weight: 600;
+   color: #22223b;
+   margin-bottom: 0.4rem;
+}
+
+/* Card text */
+.card-text {
+   font-family: 'Inter', Arial, sans-serif;
+   font-size: 1.05rem;
+   color: #3a3a5a;
+   margin-bottom: 0;
+   line-height: 1.5;
+}
+
+@media (max-width: 767.98px) {
+   .card-img-top {
+       height: 120px;
+   }
+   .card-title {
+       font-size: 1.05rem;
+   }
+   .card-text {
+       font-size: 0.95rem;
+   }
+   .card-padded {
+       padding: 0.7rem 0.3rem;
+       border-radius: 0.7rem;
+   }
+}
