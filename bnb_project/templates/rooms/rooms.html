@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Rooms{% endblock %}
+{% block content %}
+
+<!-- <div class="overlay-wellness-calm">
+    <h2 class="hero-heading">Welcome to Studio Wellness Hub</h2>
+    <h4 class="hero-sub-heading">A calm, supportive space to help you look after your wellbeing and feel connected to our community.</h4>
+</div> -->
+
+<section class="container-fluid">
+
+
+<h2 class="hero-heading">Choose Your Next Adventure</h2>
+
+    <div class="row">
+        <div class="col-12 col-md-6 px-4">
+            <a href="/rooms/booking/1/" style="text-decoration:none;color:inherit;">
+                <div class="card card-padded">
+                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="...">
+                    <div class="card-body">
+                        <h5 class="card-title">Gravity Room</h5>
+                        <p class="card-text">Our Supreme Room.</p>
+                        <p class="card-text"><strong>Price per night:</strong> $1000.00</p>
+                        <p class="card-text"><strong>Notes:</strong> Guests may feel slightly taller upon return.</p>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card card-padded">
+                <img src="{% static 'img/time-room.png' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Time Room</h5>
+                    <p class="card-text">Our Extreme Room.</p>
+                    <p class="card-text"><strong>Price per night:</strong> $5000.00</p>
+                    <p class="card-text"><strong>Notes:</strong> Guests may find that when they arrive home again, everyone else they know &amp; love will be dead.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

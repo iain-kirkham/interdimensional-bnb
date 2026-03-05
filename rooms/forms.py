@@ -18,6 +18,9 @@ class BookingForm(forms.ModelForm):
     class Meta:
         model = Booking
         fields = ["guest_name", "check_in", "nights"]
+        widgets = {
+            "check_in": forms.DateInput(attrs={"type": "date"}),
+        }
 
     def __init__(self, *args, **kwargs):
         # The view will pass room=room into the form

@@ -2,63 +2,36 @@
 {% load static %}
 
 {% block content %}
-<div class="booking-confirmation {{ booking.room.dimension_code }}">
-
-    <header class="confirmation-header">
-        <h1>Booking Confirmed</h1>
-        <p class="dimension-code">Dimension: {{ booking.room.dimension_code|upper }}</p>
-    </header>
-
-    <section class="room-summary">
-        <h2>{{ booking.room.name }}</h2>
-
-        {% if booking.room.image %}
-            <img src="{{ booking.room.image.url }}" alt="{{ booking.room.name }}" class="room-image">
-        {% else %}
-            <img src="{% static 'images/placeholder-room.jpg' %}" alt="Room image" class="room-image">
-        {% endif %}
-
-        <p>{{ booking.room.description }}</p>
-    </section>
-
-    <section class="stay-details">
-        <h2>Your Stay</h2>
-        <ul>
-            <li><strong>Room:</strong> {{ booking.room.name }}</li>
-            <li><strong>Dimension:</strong> {{ booking.room.dimension_code|upper }}</li>
-            <li><strong>Guest:</strong> {{ booking.guest_name }}</li>
-            <li><strong>Check‑in:</strong> {{ booking.check_in }}</li>
-            <li><strong>Original nights:</strong> {{ booking.nights }}</li>
-            <li><strong>Adjusted nights:</strong> {{ booking.adjusted_nights }}</li>
-            <li><strong>Adjusted checkout:</strong> {{ booking.adjusted_checkout }}</li>
-        </ul>
-    </section>
-
-    {% if physics %}
-    <section class="dimension-physics">
-        <h2>Dimension Physics</h2>
-        <ul>
-            {% for key, value in physics.items %}
-                <li><strong>{{ key|capfirst }}:</strong> {{ value }}</li>
-            {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    {% if warnings %}
-    <section class="dimension-warnings">
-        <h2>Warnings</h2>
-        <ul class="warnings-list">
+  <div class="confirmation-card">
+    <h2>Booking Confirmed!</h2>
+    <div class="confirmation-details">
+      <p><strong>Room:</strong> {{ booking.room.name }}</p>
+      <p><strong>Guest Name:</strong> {{ booking.guest_name }}</p>
+      <p><strong>Check-in Date:</strong> {{ booking.check_in }}</p>
+      <p><strong>Original Nights:</strong> {{ booking.nights }}</p>
+      <p><strong>Dimension-adjusted Nights:</strong> {{ booking.adjusted_nights }}</p>
+      <p><strong>Adjusted Checkout:</strong> {{ booking.adjusted_checkout }}</p>
+      {% if physics.gravity or physics.notes %}
+        <div class="confirmation-physics">
+          {% if physics.gravity %}
+            <p><strong>Gravity:</strong> {{ physics.gravity }}</p>
+          {% endif %}
+          {% if physics.notes %}
+            <p><strong>Notes:</strong> {{ physics.notes }}</p>
+          {% endif %}
+        </div>
+      {% endif %}
+      {% if warnings %}
+        <div class="confirmation-warnings">
+          <h3>Warnings</h3>
+          <ul>
             {% for warning in warnings %}
-                <li class="warning-item">{{ warning }}</li>
+              <li>{{ warning }}</li>
             {% endfor %}
-        </ul>
-    </section>
-    {% endif %}
-
-    <section class="actions">
-        <a href="{% url 'room_list' %}" class="btn btn-secondary">Back to Rooms</a>
-    </section>
-
-</div>
+          </ul>
+        </div>
+      {% endif %}
+    </div>
+    <a href="/" class="confirmation-btn">Back to Home</a>
+  </div>
 {% endblock %}
