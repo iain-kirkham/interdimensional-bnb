@@ -10,9 +10,9 @@ from .utils import apply_time_dilation
 
 class RoomListView(ListView):
     model = Room
-    template_name = "home/index.html"
+    template_name = "rooms/room_list.html"
     context_object_name = "rooms"
-    
+
     def get_queryset(self):
         """
         Return non-collapsing Room objects filtered by GET parameters.
@@ -68,7 +68,7 @@ class RoomListView(ListView):
 
 class RoomDetailView(DetailView):
     model = Room
-    template_name = "room_detail/room_detail.html"
+    template_name = "rooms/room_detail.html"
     context_object_name = "room"
 
     def get_object(self, queryset=None):
@@ -124,7 +124,6 @@ def book_room(request, room_id):
     if getattr(room, "is_collapsing", False):
         raise Http404("Room not available")
 
-
     if request.method == "POST":
         # Pass Room into the form for min/max validation
         form = BookingForm(request.POST, room=room)
@@ -137,9 +136,15 @@ def book_room(request, room_id):
             max_nights = time_rules.get("max_nights")
             error = None
             if min_nights is not None and nights < min_nights:
-                error = f"Minimum stay for this dimension is {min_nights} nights."
+                error = (
+                    f"Minimum stay for this dimension is {min_nights} "
+                    f"nights."
+                )
             if max_nights is not None and nights > max_nights:
-                error = f"Maximum stay for this dimension is {max_nights} nights."
+                error = (
+                    f"Maximum stay for this dimension is {max_nights} "
+                    f"nights."
+                )
             if error:
                 return render(
                     request,
@@ -163,7 +168,10 @@ def book_room(request, room_id):
             booking.adjusted_checkout = data["adjusted_checkout"]
 
             booking.save()
-            return redirect("booking_confirmation", booking_id=booking.id)
+            return redirect(
+                "rooms:booking_confirmation", booking_id=booking.id
+            )
+
     else:
         form = BookingForm(room=room)
 
