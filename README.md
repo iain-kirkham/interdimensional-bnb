@@ -3,12 +3,48 @@
 A Django-based booking platform for travelers across the multiverse. Manage listings, reality rules, and cross-dimensional reservations.
 
 
+# Table of Contents
+
+- [Table of Contents](#table-of-contents)
+- [🛠 Tech Stack](#-tech-stack)
+  - [User Stories](#user-stories)
+    - [Travelers](#travelers)
+    - [Hosts](#hosts)
+    - [Admins](#admins)
+  - [Features](#features)
+  - [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
+- [📦 Setup Locally and Dependency Management](#-setup-locally-and-dependency-management)
+  - [Setup Locally](#setup-locally)
+- [Deploying to Heroku](#deploying-to-heroku)
+  - [Dependency Management](#dependency-management)
+- [Command cheat sheet](#command-cheat-sheet)
+- [Reality Rules JSON Schema](#reality-rules-json-schema)
+  - [Field meanings:](#field-meanings)
+  - [Example:](#example)
+  - [Notes](#notes)
+- [Booking Adjustment Overview](#booking-adjustment-overview)
+  - [Inputs](#inputs)
+  - [Outputs](#outputs)
+  - [Calculation Steps](#calculation-steps)
+    - [Example:](#example-1)
+      - [Notes:](#notes-1)
+- [Enforcing min/max nights in BookingForm](#enforcing-minmax-nights-in-bookingform)
+  - [How validation works](#how-validation-works)
+    - [Example of a room with constraints](#example-of-a-room-with-constraints)
+      - [Behaviour for this example](#behaviour-for-this-example)
+  - [Template considerations (for UX)](#template-considerations-for-ux)
+  - [Developer Notes: How Night‑Range Validation Works](#developer-notes-how-nightrange-validation-works)
+    - [How the view passes the room](#how-the-view-passes-the-room)
+    - [What the form enforces](#what-the-form-enforces)
+    - [What the template may want to display](#what-the-template-may-want-to-display)
+
 # 🛠 Tech Stack
 
-- Language: Python 3.12 (via uv)
+- Language: Python 3.12 (uv)
 - Framework: Django 4.2
 - CSS Framework: Bootstrap
 - Database: PostgreSQL 15
+- Storage: AWS S3 (for media)
 - Containerisation: Docker & Docker Compose
 
 
@@ -28,6 +64,33 @@ A Django-based booking platform for travelers across the multiverse. Manage list
 ### Admins
 - As an admin, I can flag rooms or dimensions as `is_collapsing` (unsafe) to remove them from public listings and protect users.
 - As an admin, I can manage user accounts (suspend, restore, or remove) to enforce platform safety and block timeline violators.
+
+## Features
+
+- Browse Listings: View a searchable list of available rooms across dimensions, with thumbnail images and key metadata.
+
+  ![Browse Listings](docs/screenshots/home.png)
+
+- Room Detail: Detailed room pages show images, full description, `reality_rules`, pricing, and availability.
+
+  ![Room Detail](docs/screenshots/room-details.png)
+
+- Booking Flow: Select check-in date and nights, review adjusted stay (time‑dilation), and confirm a booking.
+
+  ![Booking Details](docs/screenshots/booking-details.png)
+
+- Booking Confirmation: Confirmation page shows adjusted checkout and any warnings from `reality_rules`.
+
+  ![Booking Confirmation](docs/screenshots/booking-confirm.png)
+
+
+- Host / Admin: Hosts and admins can manage listings, view upcoming reservations, and flag unsafe rooms (`is_collapsing`).
+
+  ![Admin / Host](docs/screenshots/admin-room.png)
+
+  ![Admin booking](docs/screenshots/admin-booking.png)
+
+---
 
 ## Entity Relationship Diagram (ERD)
 
@@ -103,48 +166,7 @@ docker-compose exec web uv run python manage.py migrate
 docker-compose exec web uv run python manage.py createsuperuser
 ```
 
-## Dependency Management
-
-We use uv for lightning-fast dependency management. Because of our Docker volume mapping, changes sync both ways.
-
-Add a new package:
-```bash
-docker-compose exec web uv add <package-name>
-```
-
-Sync environment (if a teammate added a package):
-
-```bash
-docker-compose exec web uv sync
-```
-
-# Command cheat sheet
-
-```bash
-# Services
-docker compose up                 # Build and start services
-docker compose up --build         # Force rebuild
-docker compose down               # Stop and remove containers
-docker compose down -v            # Stop and remove containers + volumes (wipe DB)
-
-# Django management (runs inside the web container via `uv`)
-docker compose exec web uv run python manage.py migrate
-docker compose exec web uv run python manage.py makemigrations
-docker compose exec web uv run python manage.py createsuperuser
-docker compose exec web uv run python manage.py shell
-
-# Development helpers
-docker compose exec web uv run python manage.py runserver 0.0.0.0:8000
-docker compose exec web uv run python manage.py collectstatic --noinput
-
-# Package management
-docker compose exec web uv add <package>
-docker compose exec web uv add --dev <package>
-docker compose exec web uv remove <package>
-docker compose exec web uv sync
-```
-
-## Deploying to Heroku
+# Deploying to Heroku
 This repository supports two Heroku deployment workflows; the Dashboard (GitHub integration) is the simplest and recommended for most users. The app already includes a `Procfile` with a `release` step that runs migrations automatically.
 
 Recommended: Heroku Dashboard (GitHub integration)
@@ -191,6 +213,47 @@ Notes
 - Use the Dashboard for quick rebuilds, config management, and to enable automatic deploys from GitHub.
 - For CI/CD with tests and more control, add a GitHub Actions workflow later.
 
+
+## Dependency Management
+
+We use uv for lightning-fast dependency management. Because of our Docker volume mapping, changes sync both ways.
+
+Add a new package:
+```bash
+docker-compose exec web uv add <package-name>
+```
+
+Sync environment (if a teammate added a package):
+
+```bash
+docker-compose exec web uv sync
+```
+
+# Command cheat sheet
+
+```bash
+# Services
+docker compose up                 # Build and start services
+docker compose up --build         # Force rebuild
+docker compose down               # Stop and remove containers
+docker compose down -v            # Stop and remove containers + volumes (wipe DB)
+
+# Django management (runs inside the web container via `uv`)
+docker compose exec web uv run python manage.py migrate
+docker compose exec web uv run python manage.py makemigrations
+docker compose exec web uv run python manage.py createsuperuser
+docker compose exec web uv run python manage.py shell
+
+# Development helpers
+docker compose exec web uv run python manage.py runserver 0.0.0.0:8000
+docker compose exec web uv run python manage.py collectstatic --noinput
+
+# Package management
+docker compose exec web uv add <package>
+docker compose exec web uv add --dev <package>
+docker compose exec web uv remove <package>
+docker compose exec web uv sync
+```
 
 # Reality Rules JSON Schema
 
