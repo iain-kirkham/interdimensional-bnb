@@ -8,4 +8,84 @@
             <h1 class="hero-headline display-3 fw-bold text-white text-center">Choose your next Adventure</h1>
         </div>
     </section>
+
+    <!-- Plans Section -->
+    <section class="container plans-section py-5">
+        <h2 class="plans-title mb-4">Choose your plan</h2>
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="card card-padded h-100">
+                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="Bronze Plan">
+                    <div class="card-body">
+                        <h5 class="card-title">Bronze Plan</h5>
+                        <p class="plan-price">US$99.00</p>
+                        <p class="plan-once">One time</p>
+                        <p class="card-text">Get anytime access to our growing collection of classes, workshops, and exclusive content. New items added every month.</p>
+                        <a href="#" class="btn btn-plan">SIGN UP</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-padded h-100">
+                    <img src="{% static 'img/time-room.png' %}" class="card-img-top" alt="Silver Plan">
+                    <div class="card-body">
+                        <h5 class="card-title">Silver Plan</h5>
+                        <p class="plan-price">US$149.00</p>
+                        <p class="plan-once">One time</p>
+                        <p class="card-text">Get anytime access to our growing collection of classes, workshops, and exclusive content. New items added every month.</p>
+                        <a href="#" class="btn btn-plan">SIGN UP</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="card card-padded h-100">
+                    <img src="{% static 'img/hero-bg.jpg' %}" class="card-img-top" alt="Gold Plan">
+                    <div class="card-body">
+                        <h5 class="card-title">Gold Plan</h5>
+                        <p class="plan-price">US$199.00</p>
+                        <p class="plan-once">One time</p>
+                        <p class="card-text">Get anytime access to our growing collection of classes, workshops, and exclusive content. New items added every month.</p>
+                        <a href="#" class="btn btn-plan">SIGN UP</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Brand Info Section -->
+    <section class="container brand-section py-5">
+        <div class="row align-items-center g-4">
+            <div class="col-12 col-md-6">
+                <img src="{% static 'img/gravity-room.jpg' %}" class="img-fluid rounded-3" alt="Brand Info">
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="brand-title">More about our brand</h2>
+                <p class="brand-desc">Tell people about who you are, your origin, your process, or your inspirations. Tap into your creativity. You’ve got this. The way you tell your story online can make all the difference.</p>
+                <a href="#" class="btn btn-learn">LEARN MORE</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Social Section -->
+    <section class="container social-section py-5">
+        <h2 class="social-title mb-4">Follow us on social</h2>
+        <div class="row g-3 mb-3">
+            <div class="col-6 col-md-2">
+                <img src="{% static 'img/hero-bg.jpg' %}" class="img-fluid rounded-2" alt="Social 1">
+            </div>
+            <div class="col-6 col-md-2">
+                <img src="{% static 'img/time-room.png' %}" class="img-fluid rounded-2" alt="Social 2">
+            </div>
+            <div class="col-6 col-md-2">
+                <img src="{% static 'img/gravity-room.jpg' %}" class="img-fluid rounded-2" alt="Social 3">
+            </div>
+            <div class="col-6 col-md-2">
+                <img src="{% static 'img/home-page-01.png' %}" class="img-fluid rounded-2" alt="Social 4">
+            </div>
+            <div class="col-6 col-md-2">
+                <img src="{% static 'img/hero-bg.jpg' %}" class="img-fluid rounded-2" alt="Social 5">
+            </div>
+        </div>
+        <a href="#" class="btn btn-social">SOCIAL</a>
+    </section>
 {% endblock %}
