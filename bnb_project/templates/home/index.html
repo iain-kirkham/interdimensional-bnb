@@ -1,6 +1,11 @@
 {% extends "base.html" %}
 {% block title %}Home{% endblock %}
+{% load static %}
 {% block content %}
-    <h1>Interdimensional BnB - Home</h1>
-    <!-- Add your design elements here -->
+    <section class="hero-section position-relative">
+        <img src="{% static 'img/home-page-01.png' %}" class="img-fluid w-100 hero-img" alt="Adventure Hero Background">
+        <div class="hero-overlay d-flex flex-column justify-content-center align-items-center">
+            <h1 class="hero-headline display-3 fw-bold text-white text-center">Choose your next Adventure</h1>
+        </div>
+    </section>
 {% endblock %}
