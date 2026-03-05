@@ -268,3 +268,42 @@ The backend does not automatically show hints, but the template can optionally d
 - a small note near the nights input field.
 
 This is purely a UX decision; the backend already enforces correctness.
+
+## Entity Relationship Diagram (ERD)
+
+The diagram below shows the entities for the interdimensional bnb project, with the rooms, booking and user tables along with their associate fields.
+
+```mermaid
+erDiagram
+  ROOM {
+    int id
+    string name
+    string dimension_code
+    boolean is_collapsing
+    decimal price_per_night
+    text description
+    json reality_rules
+  }
+  BOOKING {
+    int id
+    int room_id
+    int guest_id
+    string guest_name
+    date check_in
+    int nights
+    float adjusted_nights
+    datetime adjusted_checkout
+    datetime created_at
+  }
+  USER {
+    int id
+    string username
+    string email
+  }
+
+  ROOM ||--o{ BOOKING : has
+  USER ||--o{ BOOKING : books
+```
+
+- `ROOM` corresponds to `rooms.Room` and stores listing details and `reality_rules`.
+- `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
