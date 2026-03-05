@@ -1088,6 +1088,28 @@ body {
    line-height: 1.5;
 }
 
+/* Equal-height cards for rooms & homepage plans */
+.card-padded {
+    display: flex;
+    flex-direction: column;
+}
+
+.card-padded .card-body {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.card-padded .btn-plan {
+    margin-top: auto;
+}
+
+.card-img-top {
+    height: 180px;
+    object-fit: cover;
+}
+
+
 @media (max-width: 767.98px) {
    .card-img-top {
        height: 120px;

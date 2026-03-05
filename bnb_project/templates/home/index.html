@@ -2,6 +2,8 @@
 {% block title %}Home{% endblock %}
 {% load static %}
 {% block content %}
+
+    <!-- Hero Section -->
     <section class="hero-section position-relative">
         <img src="{% static 'img/home-page-01.png' %}" class="img-fluid w-100 hero-img" alt="Adventure Hero Background">
         <div class="hero-overlay d-flex flex-column justify-content-center align-items-center">
@@ -9,35 +11,38 @@
         </div>
     </section>
 
-    <!-- Plans Section -->
+    <!-- Featured Rooms Section -->
     <section class="container plans-section py-5">
-        <!-- <h2 class="plans-title mb-4">Book Your Room</h2> -->
         <div class="row g-4">
+
+            <!-- Chrono-Lag Suite -->
             <div class="col-12 col-md-6">
                 <div class="card card-padded h-100">
-                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="Gravity Room">
+                    <img src="{% static 'img/time-room.png' %}" class="card-img-top" alt="Chrono-Lag Suite">
                     <div class="card-body">
-                        <h5 class="card-title">Gravity Room</h5>
-                        <p class="plan-price">$1000.00</p>
-                        <p class="plan-once">Supreme</p>
-                        <p class="card-text">Guests may feel slightly taller upon return.</p>
-                        <a href="https://interdimensional-bnb-243551ecd9c7.herokuapp.com/rooms/" class="btn btn-plan">BROWSE ROOMS</a>
+                        <h5 class="card-title">Chrono‑Lag Suite</h5>
+                        <p class="plan-price">£150.00</p>
+                        <p class="plan-once">Temporal Comfort</p>
+                        <p class="card-text">A serene pocket of slowed time where guests unwind at their own pace.</p>
+                        <a href="{% url 'rooms:room_list' %}" class="btn btn-plan">BROWSE ROOMS</a>
                     </div>
                 </div>
             </div>
+
+            <!-- Gravity Well Chamber -->
             <div class="col-12 col-md-6">
                 <div class="card card-padded h-100">
-                    <img src="{% static 'img/time-room.png' %}" class="card-img-top" alt="Time Room">
+                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="Gravity Well Chamber">
                     <div class="card-body">
-                        <h5 class="card-title">Time Room</h5>
-                        <p class="plan-price">$5000.00</p>
-                        <p class="plan-once">Extreme</p>
-                        <p class="card-text">Guests may find that when they arrive home again, everyone else they know & love will be dead.</p>
-                        <a href="https://interdimensional-bnb-243551ecd9c7.herokuapp.com/rooms/" class="btn btn-plan">BROWSE ROOMS</a>
+                        <h5 class="card-title">Gravity Well Chamber</h5>
+                        <p class="plan-price">£180.00</p>
+                        <p class="plan-once">Variable Gravity</p>
+                        <p class="card-text">A gentle gravity gradient where movement feels dreamlike and weightless.</p>
+                        <a href="{% url 'rooms:room_list' %}" class="btn btn-plan">BROWSE ROOMS</a>
                     </div>
                 </div>
             </div>
-           
+
         </div>
     </section>
 
@@ -50,31 +55,9 @@
             <div class="col-12 col-md-6">
                 <h2 class="brand-title">About Dimension</h2>
                 <p class="brand-desc">For travelers looking for adventures across the multiverse.</p>
-                <a href="#" class="btn btn-learn">LEARN MORE</a>
+                <a href="{% url 'rooms:room_list' %}" class="btn btn-learn">LEARN MORE</a>
             </div>
         </div>
     </section>
 
-    <!-- Social Section -->
-    <!-- <section class="container social-section py-5">
-        <h2 class="social-title mb-4">Follow us on social</h2>
-        <div class="row g-3 mb-3">
-            <div class="col-6 col-md-2">
-                <img src="{% static 'img/hero-bg.jpg' %}" class="img-fluid rounded-2" alt="Social 1">
-            </div>
-            <div class="col-6 col-md-2">
-                <img src="{% static 'img/time-room.png' %}" class="img-fluid rounded-2" alt="Social 2">
-            </div>
-            <div class="col-6 col-md-2">
-                <img src="{% static 'img/gravity-room.jpg' %}" class="img-fluid rounded-2" alt="Social 3">
-            </div>
-            <div class="col-6 col-md-2">
-                <img src="{% static 'img/home-page-01.png' %}" class="img-fluid rounded-2" alt="Social 4">
-            </div>
-            <div class="col-6 col-md-2">
-                <img src="{% static 'img/hero-bg.jpg' %}" class="img-fluid rounded-2" alt="Social 5">
-            </div>
-        </div>
-        <a href="#" class="btn btn-social">SOCIAL</a>
-    </section> -->
 {% endblock %}

@@ -41,6 +41,11 @@
                             {% endif %}
                         {% endwith %}
 
+                        <!-- ⭐ NEW BUTTON ADDED HERE ⭐ -->
+                        <a href="{% url 'rooms:room_detail' room.pk %}" class="btn btn-plan">
+                            View Room
+                        </a>
+
                     </div>
                 </div>
 
