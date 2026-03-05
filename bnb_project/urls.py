@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView, RedirectView
-from bnb_project.views import account_login, account_signup
+from bnb_project.views import account_login, account_signup, home
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -13,7 +13,7 @@ urlpatterns = [
     path(
         "about/", TemplateView.as_view(template_name="about/about.html"), name="about"
     ),
-    path("home/", TemplateView.as_view(template_name="home/index.html"), name="home"),
+    path("home/", home, name="home"),
     # Rooms app lives under /rooms/
     path("rooms/", include("rooms.urls")),
     # The URL name used in the navbar
@@ -23,7 +23,7 @@ urlpatterns = [
         name="browse_rooms",
     ),
     # Root URL directs to the home page
-    path("", TemplateView.as_view(template_name="home/index.html"), name="root_home"),
+    path("", home, name="root_home"),
 ]
 
 if settings.DEBUG:

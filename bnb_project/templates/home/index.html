@@ -13,31 +13,30 @@
     <section class="container plans-section py-5">
         <!-- <h2 class="plans-title mb-4">Book Your Room</h2> -->
         <div class="row g-4">
+            {% for room in rooms|slice:":2" %}
             <div class="col-12 col-md-6">
-                <div class="card card-padded h-100">
-                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="Gravity Room">
-                    <div class="card-body">
-                        <h5 class="card-title">Gravity Room</h5>
-                        <p class="plan-price">$1000.00</p>
-                        <p class="plan-once">Supreme</p>
-                        <p class="card-text">Guests may feel slightly taller upon return.</p>
-                        <a href="https://interdimensional-bnb-243551ecd9c7.herokuapp.com/rooms/" class="btn btn-plan">BROWSE ROOMS</a>
+                <a href="{% url 'rooms:room_detail' room.pk %}" style="text-decoration:none;color:inherit;">
+                    <div class="card card-padded h-100">
+                        {% if room.image %}
+                            <img src="{{ room.image.url }}" class="card-img-top" alt="{{ room.name }}">
+                        {% else %}
+                            <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="{{ room.name }}">
+                        {% endif %}
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ room.name }}</h5>
+                            <p class="plan-price">${{ room.price_per_night }}</p>
+                            <p class="card-text">{{ room.description|truncatewords:20 }}</p>
+                            <a href="{% url 'rooms:room_detail' room.pk %}" class="btn btn-plan">VIEW ROOM</a>
+                        </div>
                     </div>
-                </div>
+                </a>
             </div>
-            <div class="col-12 col-md-6">
-                <div class="card card-padded h-100">
-                    <img src="{% static 'img/time-room.png' %}" class="card-img-top" alt="Time Room">
-                    <div class="card-body">
-                        <h5 class="card-title">Time Room</h5>
-                        <p class="plan-price">$5000.00</p>
-                        <p class="plan-once">Extreme</p>
-                        <p class="card-text">Guests may find that when they arrive home again, everyone else they know & love will be dead.</p>
-                        <a href="https://interdimensional-bnb-243551ecd9c7.herokuapp.com/rooms/" class="btn btn-plan">BROWSE ROOMS</a>
-                    </div>
-                </div>
+            {% empty %}
+            <div class="col-12">
+                <p>No rooms available right now.</p>
             </div>
-           
+            {% endfor %}
         </div>
     </section>
 

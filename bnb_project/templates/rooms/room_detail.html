@@ -6,27 +6,25 @@
 <div class="container py-5">
 
     <!-- Hero Image -->
-    {% if room.image %}
-    <div class="mb-4">
-        <img src="{{ room.image.url }}" alt="{{ room.name }}" class="img-fluid w-100 rounded">
+    <div class="card card-padded">
+        {% if room.image %}
+            <img src="{{ room.image.url }}" alt="{{ room.name }}" class="card-img-top">
+        {% endif %}
+
+        <div class="card-body">
+            <h1 class="mb-3" style="font-weight:600;">{{ room.name }}</h1>
+
+            <p class="lead" style="opacity:0.9;">{{ room.description }}</p>
+
+            <p class="mt-4" style="font-size:1.2em;">
+                <strong>Price:</strong> £{{ room.price_per_night }}
+            </p>
+
+            <a href="{% url 'rooms:book_room' room.id %}" class="btn btn-dark btn-lg btn-plan mt-4">
+                Book this room →
+            </a>
+        </div>
     </div>
-    {% endif %}
-
-    <!-- Room Title -->
-    <h1 class="mb-3" style="font-weight:600;">{{ room.name }}</h1>
-
-    <!-- Description -->
-    <p class="lead" style="opacity:0.9;">{{ room.description }}</p>
-
-    <!-- Price -->
-    <p class="mt-4" style="font-size:1.2em;">
-        <strong>Price:</strong> £{{ room.price_per_night }}
-    </p>
-
-    <!-- Book Button -->
-    <a href="{% url 'rooms:book_room' room.id %}" class="btn btn-dark btn-lg mt-4">
-        Book this room →
-    </a>
 
 </div>
 {% endblock %}

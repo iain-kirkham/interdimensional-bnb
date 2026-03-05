@@ -117,11 +117,25 @@
 
 /* Rooms page css */
 .card-padded {
+  display: flex;
+  flex-direction: column;
   transition: transform 0.2s cubic-bezier(0.4, 0.2, 0.2, 1);
+}
+.card-padded .card-body {
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+.card-padded .btn-plan {
+  margin-top: auto;
 }
 .card-padded:hover {
   transform: scale(1.04);
   z-index: 2;
+}
+.card-img-top {
+  height: 180px;
+  object-fit: cover;
 }
 /* Overlay background for calm effect */
 .overlay-wellness-calm {
