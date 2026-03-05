@@ -18,8 +18,12 @@
 
                 <div class="card card-padded">
 
-                    {# TEMPORARY STATIC IMAGE — replace later if rooms get image fields #}
-                    <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="{{ room.name }}">
+                    {# Show uploaded image when present, otherwise fall back to static image #}
+                    {% if room.image %}
+                        <img src="{{ room.image.url }}" class="card-img-top" alt="{{ room.name }}">
+                    {% else %}
+                        <img src="{% static 'img/gravity-room.jpg' %}" class="card-img-top" alt="{{ room.name }}">
+                    {% endif %}
 
                     <div class="card-body">
 
