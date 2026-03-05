@@ -33,6 +33,7 @@ class Room(models.Model):
     is_collapsing = models.BooleanField(default=False)
     price_per_night = models.DecimalField(max_digits=10, decimal_places=2)
     description = models.TextField()
+    image = models.ImageField(upload_to="rooms/", null=True, blank=True)
     reality_rules = models.JSONField(default=dict)
 
     def __str__(self):
