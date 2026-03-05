@@ -8,7 +8,7 @@ urlpatterns = [
     # Aliases for the homepage kept for backward compatibility
     path('home/', RoomListView.as_view(), name='home_page'),
     path('index/', RoomListView.as_view(), name='index'),
-    path("<int:room_id>/book/", book_room, name="book_room"),
+    path("rooms/booking/<int:room_id>/", book_room, name="book_room"),
     path(
         "booking/<int:booking_id>/confirmation/",
         booking_confirmation,

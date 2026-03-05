@@ -60,8 +60,15 @@
             <nav class="nav-modal-links">
                 <a href="{% url 'about' %}">Help Centre</a>
                 <a href="{% url 'about' %}">Giftcards</a>
-                <a href="{% url 'login' %}">Login</a>
-                <a href="{% url 'signup' %}">Signup</a>
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'account_logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn menu-link" style="background:none;border:none;padding:0;color:#000;cursor:pointer;">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'account_login' %}">Login</a>
+                    <a href="{% url 'signup' %}">Signup</a>
+                {% endif %}
             </nav>
             <div class="nav-modal-newsletter">
                 <div class="newsletter-title">Subscribe to our newsletter</div>

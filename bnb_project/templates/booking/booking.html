@@ -21,7 +21,7 @@
                         <strong style="color: #b00;">{{ error }}</strong>
                     </div>
                 {% endif %}
-                <form method="post" class="booking-form">
+                <form method="post" class="booking-form" action="{% url 'rooms:book_room' room.id %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="id_guest_name">Guest Name</label>
