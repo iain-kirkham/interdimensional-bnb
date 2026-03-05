@@ -125,13 +125,16 @@
 }
 /* Overlay background for calm effect */
 .overlay-wellness-calm {
-  background: linear-gradient(135deg, #e0e7ff 0%, #f8fafc 100%);
-  border-radius: 1.2rem;
-  box-shadow: 0 4px 24px rgba(60, 60, 100, 0.08);
-  padding: 1.2rem 1rem 1rem 1rem;
-  margin: 1.5rem 0;
-  text-align: center;
+  width: 100%;
+  min-height: auto;
+  position: relative;
+  display: block;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(167, 199, 231, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(182, 227, 193, 0.15) 0%, transparent 50%);
+  padding: 2rem 1rem;
 }
+
 
 /* Hero heading style */
 .hero-heading {
@@ -571,7 +574,9 @@ body {
   color: #fff;
   font-family: 'neue machina', Arial, sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
+
 }
 
 .hero-spotlight {
@@ -606,6 +611,11 @@ body {
   overflow-x: hidden;
 }
 
+.content-area {
+  color: #111;   /* or #222 if you prefer slightly softer */
+}
+
+
 
 .content-area {
   background-color: #f3f3f3;
@@ -613,11 +623,11 @@ body {
   width: 100%;
   box-sizing: border-box;
   /* Fill area between menuBar and footer */
-  min-height: calc(100vh - 120px - 80px);
+  min-height: auto;
   /* 120px footer, 80px menuBar, adjust as needed */
   padding-top: 80px;
   /* space for menuBar */
-  padding-bottom: 120px;
+  padding-bottom: 0;
   /* space for footer */
 }
 
@@ -990,7 +1000,7 @@ body {
 }
 
 .footer-section {
-  position: fixed;
+  position: static;
   left: 0;
   bottom: 0;
   width: 100vw;
