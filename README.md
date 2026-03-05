@@ -13,10 +13,9 @@ A Django-based booking platform for travelers across the multiverse. Manage list
     - [Admins](#admins)
   - [Features](#features)
   - [Entity Relationship Diagram (ERD)](#entity-relationship-diagram-erd)
-- [📦 Setup Locally and Dependency Management](#-setup-locally-and-dependency-management)
-  - [Setup Locally](#setup-locally)
+- [Setup Locally](#setup-locally)
 - [Deploying to Heroku](#deploying-to-heroku)
-  - [Dependency Management](#dependency-management)
+- [Dependency Management](#dependency-management)
 - [Command cheat sheet](#command-cheat-sheet)
 - [Reality Rules JSON Schema](#reality-rules-json-schema)
   - [Field meanings:](#field-meanings)
@@ -132,9 +131,8 @@ erDiagram
 - `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
 
 
-# 📦 Setup Locally and Dependency Management
+# Setup Locally
 
-## Setup Locally
 
 1. Clone & Setup Environment
 
@@ -214,7 +212,7 @@ Notes
 - For CI/CD with tests and more control, add a GitHub Actions workflow later.
 
 
-## Dependency Management
+# Dependency Management
 
 We use uv for lightning-fast dependency management. Because of our Docker volume mapping, changes sync both ways.
 
