@@ -39,13 +39,52 @@ docker-compose exec web uv run python manage.py migrate
 docker-compose exec web uv run python manage.py createsuperuser
 ```
 
+## Entity Relationship Diagram (ERD)
+
+The diagram below shows the entities for the interdimensional bnb project, with the rooms, booking and user tables along with their associate fields.
+
+```mermaid
+erDiagram
+  ROOM {
+    int id
+    string name
+    string dimension_code
+    boolean is_collapsing
+    decimal price_per_night
+    text description
+    json reality_rules
+  }
+  BOOKING {
+    int id
+    int room_id
+    int guest_id
+    string guest_name
+    date check_in
+    int nights
+    float adjusted_nights
+    datetime adjusted_checkout
+    datetime created_at
+  }
+  USER {
+    int id
+    string username
+    string email
+  }
+
+  ROOM ||--o{ BOOKING : has
+  USER ||--o{ BOOKING : books
+```
+
+- `ROOM` corresponds to `rooms.Room` and stores listing details and `reality_rules`.
+- `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
+
 # 📦 Dependency Management
 
 We use uv for lightning-fast dependency management. Because of our Docker volume mapping, changes sync both ways.
 
 Add a new package:
 ```bash
-    docker-compose exec web uv add <package-name>
+docker-compose exec web uv add <package-name>
 ```
 
 Sync environment (if a teammate added a package):
@@ -53,7 +92,6 @@ Sync environment (if a teammate added a package):
 ```bash
 docker-compose exec web uv sync
 ```
-
 
 # Command cheat sheet
 
@@ -80,6 +118,76 @@ docker compose exec web uv add --dev <package>
 docker compose exec web uv remove <package>
 docker compose exec web uv sync
 ```
+
+## Deploying to Heroku
+
+This project can be deployed to Heroku either using the Docker Container Registry (recommended when you rely on the existing `Dockerfile`) or the standard Python buildpack (using the `Procfile`). The repository already includes a `Procfile` that runs `gunicorn` and performs migrations on release.
+
+Recommended quick steps (Heroku Container Registry)
+
+```bash
+# Build and push the Docker image to Heroku's Container Registry
+heroku login
+heroku container:login
+heroku create my-interdimensional-bnb
+heroku stack:set container -a my-interdimensional-bnb
+
+# Tag & push the web process (from repo root)
+heroku container:push web -a my-interdimensional-bnb
+heroku container:release web -a my-interdimensional-bnb
+
+# Add a Postgres database (optional)
+heroku addons:create heroku-postgresql:hobby-dev -a my-interdimensional-bnb
+
+# Set required environment variables (example)
+heroku config:set DJANGO_SECRET_KEY="your-secret" DEBUG=false -a my-interdimensional-bnb
+
+# Run migrations and create a superuser if needed
+heroku run python manage.py migrate -a my-interdimensional-bnb
+heroku run python manage.py createsuperuser -a my-interdimensional-bnb
+
+# Open app
+heroku open -a my-interdimensional-bnb
+```
+
+Alternative: Deploy with the Python buildpack
+
+```bash
+# Create app and set buildpack (if not auto-detected)
+heroku create my-interdimensional-bnb
+heroku buildpacks:set heroku/python -a my-interdimensional-bnb
+
+# Push via Heroku Git (ensure your main branch is the one you want to deploy)
+git push heroku main
+
+# Heroku will use the included Procfile:
+#   web: gunicorn bnb_project.wsgi
+# and the release phase will run: `python manage.py migrate`
+
+# Add Postgres, set config, and run management commands as above
+heroku addons:create heroku-postgresql:hobby-dev -a my-interdimensional-bnb
+heroku config:set DJANGO_SECRET_KEY="your-secret" DEBUG=false -a my-interdimensional-bnb
+heroku run python manage.py createsuperuser -a my-interdimensional-bnb
+```
+
+Notes
+- The `Procfile` in this repo contains a `release` process that runs migrations automatically: `release: python manage.py migrate`.
+- Populate all required environment variables listed in `.env.example` on Heroku using `heroku config:set KEY=value`.
+ - DATABASE_URL: This project uses `dj_database_url` and reads the database connection from the `DATABASE_URL` environment variable (see `bnb_project/settings.py`).
+  - The `heroku-postgresql` addon will automatically set `DATABASE_URL` when provisioned — however, this addon is optional. Alternatively:
+    - Provision an external Postgres instance (any provider) and set `DATABASE_URL` to that instance's URL.
+  - If you need to set it manually, use the full URL form: `postgres://USER:PASSWORD@HOST:PORT/NAME` and set it with:
+
+    ```bash
+    heroku config:set DATABASE_URL="postgres://USER:PASSWORD@HOST:PORT/NAME" -a my-interdimensional-bnb
+    ```
+  - For local development you can either keep using the discrete `DB_NAME`, `DB_USER`, etc. variables from `env.example`, or add a `DATABASE_URL` to your `.env` file. Example `DATABASE_URL` for the example `.env` values:
+
+    ```bash
+    DATABASE_URL=postgres://postgres:your_password_here@db:5432/bnb_db
+    ```
+- If you use the Container Registry approach, your Docker image should include any build steps required for static files; otherwise run `collectstatic` via `heroku run` or during image build.
+
 
 # Reality Rules JSON Schema
 
@@ -269,41 +377,3 @@ The backend does not automatically show hints, but the template can optionally d
 
 This is purely a UX decision; the backend already enforces correctness.
 
-## Entity Relationship Diagram (ERD)
-
-The diagram below shows the entities for the interdimensional bnb project, with the rooms, booking and user tables along with their associate fields.
-
-```mermaid
-erDiagram
-  ROOM {
-    int id
-    string name
-    string dimension_code
-    boolean is_collapsing
-    decimal price_per_night
-    text description
-    json reality_rules
-  }
-  BOOKING {
-    int id
-    int room_id
-    int guest_id
-    string guest_name
-    date check_in
-    int nights
-    float adjusted_nights
-    datetime adjusted_checkout
-    datetime created_at
-  }
-  USER {
-    int id
-    string username
-    string email
-  }
-
-  ROOM ||--o{ BOOKING : has
-  USER ||--o{ BOOKING : books
-```
-
-- `ROOM` corresponds to `rooms.Room` and stores listing details and `reality_rules`.
-- `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
