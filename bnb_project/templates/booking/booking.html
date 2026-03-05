@@ -16,6 +16,11 @@
                 {% if room.reality_rules.physics.notes %}
                     <p><strong>Notes:</strong> {{ room.reality_rules.physics.notes }}</p>
                 {% endif %}
+                {% if error %}
+                    <div class="booking-error">
+                        <strong style="color: #b00;">{{ error }}</strong>
+                    </div>
+                {% endif %}
                 <form method="post" class="booking-form">
                     {% csrf_token %}
                     <div class="form-group">
@@ -55,6 +60,10 @@
             </div>
             <div class="booking-room-image">
                 <img src="{% static 'img/gravity-room.jpg' %}" alt="Gravity Room" />
+                <br>
+                <div class="booking-note">
+                    <small>Guests may feel slightly taller upon return. Have a nice stay!</small>
+                </div>
             </div>
         </div>
     </div>

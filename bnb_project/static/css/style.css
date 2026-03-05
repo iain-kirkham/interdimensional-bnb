@@ -1,3 +1,71 @@
+/* Booking Confirmation Styles */
+.confirmation-card {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 2rem;
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+.confirmation-details {
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+.confirmation-details p {
+  margin: 0.5rem 0;
+}
+.confirmation-physics {
+  background: #f7f7fa;
+  border-radius: 8px;
+  padding: 0.7rem 1rem;
+  margin: 1rem 0;
+}
+.confirmation-warnings {
+  background: #fff7e6;
+  border: 1px solid #ffe0b2;
+  border-radius: 12px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.confirmation-warnings h3 {
+  margin-top: 0;
+  color: #d35400;
+}
+.confirmation-warnings ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.confirmation-warnings li {
+  color: #d35400;
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+.confirmation-btn {
+  display: inline-block;
+  background: #181818;
+  color: #fff;
+  border: none;
+  border-radius: 24px;
+  padding: 0.8rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+.confirmation-btn:hover {
+  background: #005fa3;
+}
+.booking-note {
+  margin-top: 1rem;
+  text-align: center;
+  color: #555;
+  font-size: 0.98rem;
+  display: flex;
+  flex-direction: row;
+}
 .booking-card-content {
   display: flex;
   flex-direction: row;
@@ -11,8 +79,9 @@
 .booking-room-image {
   flex: 1;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
 }
 .booking-room-image img {
   max-width: 220px;
@@ -54,9 +123,9 @@
   font-size: 1rem;
   width: 100%;
 }
-.login-btn {
+.book-btn {
   background: #181818;
-  color: #fff;
+  color: #fff !important;
   border: none;
   border-radius: 24px;
   padding: 0.8rem 2.5rem;
@@ -162,7 +231,7 @@
   margin-top: 0.2rem;
 }
 .book-btn {
-  background: #181818;
+  background: #292929;
   color: #fff;
   border: none;
   border-radius: 24px;

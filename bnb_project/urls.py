@@ -18,7 +18,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView, RedirectView
-from rooms.views import RoomListView, RoomDetailView, ProfileView, book_room
+from rooms.views import RoomListView, RoomDetailView, ProfileView, book_room, booking_confirmation
 from bnb_project.views import account_login, account_signup
 
 urlpatterns = [
@@ -41,6 +41,7 @@ urlpatterns = [
         name="signup",
     ),
     path("booking/<int:room_id>/", book_room, name="booking"),
+    path("booking/confirmation/<int:booking_id>/", booking_confirmation, name="booking_confirmation"),
 
 
     path("accounts/login/", account_login, name="account_login"),
