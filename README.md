@@ -69,7 +69,7 @@ erDiagram
 - `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
 
 
-# 📦 Steup Locally and Dependency Management
+# 📦 Setup Locally and Dependency Management
 
 ## Setup Locally
 
