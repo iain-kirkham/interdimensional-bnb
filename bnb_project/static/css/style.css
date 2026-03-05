@@ -1,3 +1,121 @@
+/* Homepage Plans Section */
+.plans-title {
+  font-size: 2.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+.plan-price {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+}
+.plan-once {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 0.7rem;
+}
+.btn-plan {
+  background: #ff5c1a;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 2rem;
+  padding: 0.5rem 1.5rem;
+  margin-top: 0.7rem;
+  border: none;
+  transition: background 0.2s;
+}
+.btn-plan:hover {
+  background: #ff7f50;
+  color: #fff;
+}
+
+/* Brand Section */
+.brand-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.brand-desc {
+  font-size: 1.1rem;
+  color: #444;
+  margin-bottom: 1.2rem;
+}
+.btn-learn {
+  background: #ff5c1a;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 2rem;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  transition: background 0.2s;
+}
+.btn-learn:hover {
+  background: #ff7f50;
+  color: #fff;
+}
+
+/* Social Section */
+.social-title {
+  font-size: 1.7rem;
+  font-weight: 600;
+  margin-bottom: 1.2rem;
+}
+.btn-social {
+  background: #ff5c1a;
+  color: #fff;
+  font-weight: 600;
+  border-radius: 2rem;
+  padding: 0.5rem 1.5rem;
+  border: none;
+  transition: background 0.2s;
+}
+.btn-social:hover {
+  background: #ff7f50;
+  color: #fff;
+}
+/* Home page Styles */
+.hero-section {
+  width: 100%;
+  min-height: 400px;
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 2rem;
+}
+.hero-img {
+  width: 100%;
+  height: 400px;
+  object-fit: cover;
+  filter: brightness(0.6);
+}
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+.hero-headline {
+  color: #fff;
+  text-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  letter-spacing: 0.02em;
+}
+@media (max-width: 767.98px) {
+  .hero-img {
+    height: 220px;
+  }
+  .hero-headline {
+    font-size: 2rem;
+  }
+}
+
+
+
+
+/* Rooms page css */
 .card-padded {
   transition: transform 0.2s cubic-bezier(0.4, 0.2, 0.2, 1);
 }
