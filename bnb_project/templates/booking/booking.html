@@ -21,7 +21,7 @@
                         <strong style="color: #b00;">{{ error }}</strong>
                     </div>
                 {% endif %}
-                <form method="post" class="booking-form">
+                <form method="post" class="booking-form" action="{% url 'rooms:book_room' room.id %}">
                     {% csrf_token %}
                     <div class="form-group">
                         <label for="id_guest_name">Guest Name</label>
@@ -62,7 +62,7 @@
                 <img src="{% static 'img/gravity-room.jpg' %}" alt="Gravity Room" />
                 <br>
                 <div class="booking-note">
-                    <small>Guests may feel slightly taller upon return. Have a nice stay!</small>
+                    <small></small>
                 </div>
             </div>
         </div>
