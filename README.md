@@ -6,38 +6,28 @@ A Django-based booking platform for travelers across the multiverse. Manage list
 # 🛠 Tech Stack
 
 - Language: Python 3.12 (via uv)
+- Framework: Django 4.2
+- CSS Framework: Bootstrap
 - Database: PostgreSQL 15
 - Containerisation: Docker & Docker Compose
 
-1. Clone & Setup Environment
 
-```bash
-git clone https://github.com/iain-kirkham/interdimensional-bnb.git
-cd interdimensional-bnb
-cp .env.example .env
-```
+## User Stories
 
-2. Launch Containers
+### Travelers
+- As a traveler, I can browse available rooms across dimensions and view each room's `reality_rules` and metadata so I can find spaces that match my biological and temporal needs (for example: breathable atmosphere, acceptable gravity).
+- As a traveler, I can filter rooms by reality rules (gravity, time dilation, dimension code, warnings) so I avoid stays with dangerous temporal or physical properties.
+- As a traveler, I can view portal previews (images) and key room details before booking so I know what to expect on arrival.
+- As a traveler, I can select check-in date and number of nights and complete a booking; the system will compute and store `adjusted_nights` and `adjusted_checkout` using the room's `reality_rules`.
 
-This will build the web image and pull the Postgres database.
+### Hosts
+- As a host, I can create and manage room listings including `name`, `dimension_code`, `price_per_night`, `description`, images, and `reality_rules` so guests understand the room's physics and constraints.
+- As a host, I can set a price in Universal Credits per night and update availability to reflect maintenance or safety windows.
+- As a host, I can view upcoming bookings for my rooms so I can prepare the space (for example: decontamination, portal calibration).
 
-```bash
-docker-compose up --build
-```
-
-The site will be live at: `http://localhost:8000`
-
-3. Initialise Database
-
-In a new terminal, run the migrations and create your admin account:
-
-```bash
-# Run migrations
-docker-compose exec web uv run python manage.py migrate
-
-# Create your superuser
-docker-compose exec web uv run python manage.py createsuperuser
-```
+### Admins
+- As an admin, I can flag rooms or dimensions as `is_collapsing` (unsafe) to remove them from public listings and protect users.
+- As an admin, I can manage user accounts (suspend, restore, or remove) to enforce platform safety and block timeline violators.
 
 ## Entity Relationship Diagram (ERD)
 
@@ -78,7 +68,42 @@ erDiagram
 - `ROOM` corresponds to `rooms.Room` and stores listing details and `reality_rules`.
 - `BOOKING` corresponds to `rooms.Booking` and links to `ROOM` and the auth `USER` (via `settings.AUTH_USER_MODEL`).
 
-# 📦 Dependency Management
+
+# 📦 Steup Locally and Dependency Management
+
+## Setup Locally
+
+1. Clone & Setup Environment
+
+```bash
+git clone https://github.com/iain-kirkham/interdimensional-bnb.git
+cd interdimensional-bnb
+cp .env.example .env
+```
+
+2. Launch Containers
+
+This will build the web image and pull the Postgres database.
+
+```bash
+docker-compose up --build
+```
+
+The site will be live at: `http://localhost:8000`
+
+3. Initialise Database
+
+In a new terminal, run the migrations and create your admin account:
+
+```bash
+# Run migrations
+docker-compose exec web uv run python manage.py migrate
+
+# Create your superuser
+docker-compose exec web uv run python manage.py createsuperuser
+```
+
+## Dependency Management
 
 We use uv for lightning-fast dependency management. Because of our Docker volume mapping, changes sync both ways.
 
